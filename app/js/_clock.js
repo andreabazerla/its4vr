@@ -87,11 +87,9 @@ const pathsP = JSON.parse(JSON.stringify(paths));
 
 const database = new Set();
 
-const active = [];
-active.push(0);
-
-const dead = [];
-active.push(42);
+const active = new Map();
+active.set(0, 0.50);
+active.set(16, 0.10);
 
 const priority = new Map();
 // priority.set(21, -1);
@@ -179,7 +177,6 @@ const update = (paths, oldPaths, matrix, nodes) => {
     changed = 0;
   }
   console.log('----------------------');
-  console.log(heatmap);
   return [paths, matrix];
 };
 
@@ -244,11 +241,12 @@ const createID = () => {
 };
 
 const random = (paths, database) => {
-  for (const birth of active) {
+  for (const birth of active.keys()) {
     for (const path of paths) {
       for (const cell of path.cells) {
         if (cell.id === birth) {
-          cell.birth = Math.random();
+          const limit = active.get(cell.id);
+          const rand = Math.random();
           let id = 0;
           if (database.size < 9000000000) {
             while (id === 0) {
@@ -257,7 +255,7 @@ const random = (paths, database) => {
           } else {
             id = 0;
           }
-          if (cell.birth > 0.90 && path.cells[1].unit.alive === false) {
+          if (rand < limit && path.cells[1].unit.alive === false) {
             cell.unit.alive = true;
             cell.unit.idu = id;
           } else {
@@ -267,19 +265,6 @@ const random = (paths, database) => {
         }
         break;
       }
-      break;
-    }
-  }
-  for (const death of dead) {
-    for (const path of paths) {
-      for (const cell of path.cells) {
-        if (cell.id === dead) {
-          cell.death = Math.random();
-          break;
-        }
-        break;
-      }
-      break;
     }
   }
   return paths;
@@ -373,6 +358,7 @@ function routine(paths, virgin, matrix, nodes) {
   const [paths5, matrix2] = update(paths3, paths, matrix, nodes);
   refresh(paths5);
   tick += 1;
+  console.log(tick);
   if (!timeout) {
     var timeout = setTimeout(gg = () => { routine(paths5, virgin2, matrix2, nodes); }, clock);
   }

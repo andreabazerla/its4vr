@@ -217,6 +217,8 @@ module.exports = {
                 },
               });
 
+              id += 1;
+
               const length = haversine.haversine(x1, y1, x2, y2);
               const density = 0;
               const speed = 0;
@@ -374,6 +376,9 @@ module.exports = {
           age,
         },
       });
+
+      id += 1;
+
     }
     return cells;
   },
