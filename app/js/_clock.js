@@ -91,6 +91,19 @@ const active = new Map();
 active.set(0, 0.50);
 active.set(16, 0.10);
 
+let dead = [];
+for (let i = 0; i < cells.length; i += 1) {
+  dead[i] = [];
+  for (let j = 0; j < cells.length; j += 1) {
+    dead[i][j] = 0;
+  }
+}
+
+dead[0][15] = 0.10;
+dead[0][46] = 0.90;
+
+console.log(dead);
+
 const priority = new Map();
 // priority.set(21, -1);
 
@@ -267,8 +280,20 @@ const random = (paths, database) => {
       }
     }
   }
+  const rand = Math.random();
+  const max = 0;
+  for (let i = 0; i < cells.length; i += 1) {
+    for (let j = 0; j < cells.length; j += 1) {
+      if (dead[i][j] > 0) {
+        if (rand > dead[i][j]) {
+        }
+      }
+    }
+  }
   return paths;
 };
+
+console.log(paths);
 
 const refresh = (paths) => {
   for (const path of paths) {

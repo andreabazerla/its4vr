@@ -146,8 +146,9 @@ module.exports = {
               const death = 0;
 
               const idu = 0;
-              const type = 0;
               let alive = false;
+              const destination = null;
+              const type = 0;
               const age = 0;
 
               cells.push({
@@ -158,8 +159,9 @@ module.exports = {
                 death,
                 unit: {
                   idu,
-                  type,
                   alive,
+                  destination,
+                  type,
                   age,
                 },
               });
@@ -190,8 +192,9 @@ module.exports = {
                   death,
                   unit: {
                     idu,
-                    type,
                     alive,
+                    destination,
+                    type,
                     age,
                   },
                 });
@@ -211,8 +214,9 @@ module.exports = {
                 death,
                 unit: {
                   idu,
-                  type,
                   alive,
+                  destination,
+                  type,
                   age,
                 },
               });
@@ -288,8 +292,10 @@ module.exports = {
       let nextY = 0;
       const birth = 0;
       const death = 0;
-      let alive = false;
+
       const idu = 0;
+      let alive = false;
+      const destination = null;
       const type = 0;
       const age = 0;
 
@@ -302,8 +308,9 @@ module.exports = {
         death,
         unit: {
           idu,
-          type,
           alive,
+          destination,
+          type,
           age,
         },
       });
@@ -334,8 +341,9 @@ module.exports = {
           death,
           unit: {
             idu,
-            type,
             alive,
+            destination,
+            type,
             age,
           },
         });
@@ -371,8 +379,9 @@ module.exports = {
         death,
         unit: {
           idu,
-          type,
           alive,
+          destination,
+          type,
           age,
         },
       });
