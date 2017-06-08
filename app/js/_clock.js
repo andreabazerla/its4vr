@@ -88,7 +88,7 @@ const pathsP = JSON.parse(JSON.stringify(paths));
 const database = new Set();
 
 const active = [];
-active.push(0);
+active.push(0,13,19);
 
 const dead = [];
 active.push(42);
@@ -101,7 +101,10 @@ const heatmap = [];
 for (const [key, value] of priority) {
   pathsP[key].priority = value;
 }
-
+/**
+ * @param pollutiown 
+ * map of cells, any cell identified by id has a number that means how many car pass on it 
+ */
 const pollution = new Map();
 for (const cell of cells) {
   pollution.set(cell.id, 0);
@@ -109,7 +112,15 @@ for (const cell of cells) {
 
 let maxPollution = 0;
 let maxLength = 0;
-
+/**
+ * 
+ * @param {*} paths 
+ * @param {*} oldPaths 
+ * @param {*} matrix 
+ * @param {*} nodes
+ * 
+ * @constant totAlive identified how many cells comes alive in a pat from the beginning 
+ */
 const update = (paths, oldPaths, matrix, nodes) => {
   let alive = 0;
   let changed = 0;
@@ -267,7 +278,6 @@ const random = (paths, database) => {
         }
         break;
       }
-      break;
     }
   }
   for (const death of dead) {

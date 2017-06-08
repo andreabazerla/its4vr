@@ -350,7 +350,7 @@ module.exports = {
 
           data.setAttributeNS(null, 'class', 'data');
           data.setAttributeNS(null, 'id', `data_${id}`);
-          data.innerHTML = `${id}`;
+          data.innerHTML =`${id}`;
 
           g.appendChild(cell);
           cell.appendChild(data);
