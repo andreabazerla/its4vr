@@ -141,9 +141,9 @@ module.exports = {
 
               let nextX = 0;
               let nextY = 0;
-
               const birth = 0;
               const death = 0;
+              const increment = 0;
 
               const idu = 0;
               let alive = false;
@@ -157,6 +157,7 @@ module.exports = {
                 nextY,
                 birth,
                 death,
+                increment,
                 unit: {
                   idu,
                   alive,
@@ -190,6 +191,7 @@ module.exports = {
                   nextY,
                   birth,
                   death,
+                  increment,
                   unit: {
                     idu,
                     alive,
@@ -212,6 +214,7 @@ module.exports = {
                 nextY,
                 birth,
                 death,
+                increment,
                 unit: {
                   idu,
                   alive,
@@ -292,13 +295,13 @@ module.exports = {
       let nextY = 0;
       const birth = 0;
       const death = 0;
+      const increment = 0;
 
       const idu = 0;
-      let alive = false;
+      const alive = false;
       const destination = null;
       const type = 0;
       const age = 0;
-
 
       cells.push({
         id,
@@ -306,6 +309,7 @@ module.exports = {
         nextY,
         birth,
         death,
+        increment,
         unit: {
           idu,
           alive,
@@ -339,6 +343,7 @@ module.exports = {
           nextY,
           birth,
           death,
+          increment,
           unit: {
             idu,
             alive,
@@ -377,6 +382,7 @@ module.exports = {
         nextY,
         birth,
         death,
+        increment,
         unit: {
           idu,
           alive,

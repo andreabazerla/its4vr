@@ -72,7 +72,6 @@ controls.add(text, 'pollutionIndex').min(0).max(1).step(0.01)
   },
 );
 
-
 gui.remember(text);
 
 const g = Parser.getMap(Parser.getPlacemarks(map, 1), 0);
@@ -92,29 +91,17 @@ active.set(0, 0.50);
 active.set(16, 0.10);
 
 let dead = [];
-for (let i = 0; i < cells.length; i += 1) {
-  dead[i] = [];
-  for (let j = 0; j < cells.length; j += 1) {
-    dead[i][j] = 0;
-  }
-}
-
-dead[0][15] = 0.10;
-dead[0][46] = 0.90;
-
-console.log(dead);
+dead.push(45, 14);
 
 const priority = new Map();
 // priority.set(21, -1);
-
-const heatmap = [];
 
 for (const [key, value] of priority) {
   pathsP[key].priority = value;
 }
 /**
- * @param pollutiown 
- * map of cells, any cell identified by id has a number that means how many car pass on it 
+ * @param pollutiown
+ * map of cells, any cell identified by id has a number that means how many car pass on it
  */
 const pollution = new Map();
 for (const cell of cells) {
@@ -124,13 +111,13 @@ for (const cell of cells) {
 let maxPollution = 0;
 let maxLength = 0;
 /**
- * 
- * @param {*} paths 
- * @param {*} oldPaths 
- * @param {*} matrix 
+ *
+ * @param {*} paths
+ * @param {*} oldPaths
+ * @param {*} matrix
  * @param {*} nodes
- * 
- * @constant totAlive identified how many cells comes alive in a pat from the beginning 
+ *
+ * @constant totAlive identified how many cells comes alive in a pat from the beginning
  */
 const update = (paths, oldPaths, matrix, nodes) => {
   let alive = 0;
@@ -144,15 +131,10 @@ const update = (paths, oldPaths, matrix, nodes) => {
     for (let j = 1; j < paths[i].cells.length - 1; j += 1) {
       let alive2 = pollution.get(paths[i].cells[j].id);
       if (paths[i].cells[j].unit.alive === true) {
-        const x = paths[i].cells[j].nextX;
-        const y = paths[i].cells[j].nextY;
-        const coo = {
-          x,
-          y,
-        };
         alive += 1;
         alive2 += 1;
         pollution.set(paths[i].cells[j].id, alive2);
+        paths[i].cells[j].increment = alive2;
       }
       if (oldPaths[i].cells[j].unit.alive === false && paths[i].cells[j].unit.alive === true) {
         changed += 1;
@@ -217,19 +199,26 @@ const upgrade = (paths, virgin) => {
             ((virgin[path.ID].cells)[h]).unit.alive = false;
             ((virgin[path.ID].cells)[p2]).unit.idu = ((path.cells)[h]).unit.idu;
             ((virgin[path.ID].cells)[h]).unit.idu = 0;
+            ((virgin[path.ID].cells)[p2]).unit.destination = ((path.cells)[h]).unit.destination;
+            ((virgin[path.ID].cells)[h]).unit.destination = null;
           } else {
             ((virgin[path.ID].cells)[h]).unit.alive = ((path.cells)[h]).unit.alive;
             ((virgin[path.ID].cells)[h]).unit.idu = ((path.cells)[h]).unit.idu;
+            ((virgin[path.ID].cells)[h]).unit.destination = ((path.cells)[h]).unit.destination;
           }
         } else {
           if (((path.cells)[p2]).unit.alive === true) {
             ((virgin[path.ID].cells)[h]).unit.alive = true;
             ((virgin[path.ID].cells)[h]).unit.idu = ((path.cells)[p0]).unit.idu;
             ((virgin[path.ID].cells)[p0]).unit.idu = 0;
+            ((virgin[path.ID].cells)[h]).unit.destination = ((path.cells)[p0]).unit.destination;
+            ((virgin[path.ID].cells)[p0]).unit.destination = null;
           } else {
             ((virgin[path.ID].cells)[h]).unit.alive = true;
             ((virgin[path.ID].cells)[h]).unit.idu = ((path.cells)[p0]).unit.idu;
             ((virgin[path.ID].cells)[p0]).unit.idu = 0;
+            ((virgin[path.ID].cells)[h]).unit.destination = ((path.cells)[p0]).unit.destination;
+            ((virgin[path.ID].cells)[p0]).unit.destination = null;
           }
         }
       } else {
@@ -238,16 +227,19 @@ const upgrade = (paths, virgin) => {
             ((virgin[path.ID].cells)[h]).unit.alive = false;
             ((virgin[path.ID].cells)[p2]).unit.idu = ((path.cells)[h]).unit.idu;
             ((virgin[path.ID].cells)[h]).unit.idu = 0;
+            ((virgin[path.ID].cells)[p2]).unit.destination = ((path.cells)[h]).unit.destination;
+            ((virgin[path.ID].cells)[h]).unit.destination = null;
           } else {
             ((virgin[path.ID].cells)[h]).unit.alive = ((path.cells)[h]).unit.alive;
             ((virgin[path.ID].cells)[h]).unit.idu = ((path.cells)[h]).unit.idu;
+            ((virgin[path.ID].cells)[h]).unit.destination = ((path.cells)[h]).unit.destination;
           }
         } else {
           ((virgin[path.ID].cells)[h]).unit.alive = ((path.cells)[h]).unit.alive;
           ((virgin[path.ID].cells)[h]).unit.idu = ((path.cells)[h]).unit.idu;
+          ((virgin[path.ID].cells)[h]).unit.destination = ((path.cells)[h]).unit.destination;
         }
       }
-
     }
   }
   return virgin;
@@ -282,6 +274,7 @@ const random = (paths, database) => {
           if (rand < limit && path.cells[1].unit.alive === false) {
             cell.unit.alive = true;
             cell.unit.idu = id;
+            cell.unit.destination = dead[Math.floor(Math.random() * dead.length)];
           } else {
             cell.unit.alive = false;
           }
@@ -291,20 +284,8 @@ const random = (paths, database) => {
       }
     }
   }
-  const rand = Math.random();
-  const max = 0;
-  for (let i = 0; i < cells.length; i += 1) {
-    for (let j = 0; j < cells.length; j += 1) {
-      if (dead[i][j] > 0) {
-        if (rand > dead[i][j]) {
-        }
-      }
-    }
-  }
   return paths;
 };
-
-console.log(paths);
 
 const refresh = (paths) => {
   for (const path of paths) {
@@ -385,6 +366,23 @@ let f = 0;
 let h = 0;
 let tick = 0;
 
+const heatmapf = (paths) => {
+  const heatmap = [];
+  let max = 0;
+  for (let i = 0; i < paths.length; i += 1) {
+    for (let j = 0; j < paths[i].cells.length; j += 1) {
+      max = Math.max(max, paths[i].cells[j].increment);
+      const point = {
+        x: paths[i].cells[j].nextX,
+        y: paths[i].cells[j].nextY,
+        value: paths[i].cells[j].increment,
+      };
+      heatmap.push(point);
+    }
+  }
+  return heatmap;
+};
+
 let gg = 0;
 function routine(paths, virgin, matrix, nodes) {
   const virgin2 = resetf(JSON.parse(JSON.stringify(virgin)));
@@ -392,9 +390,11 @@ function routine(paths, virgin, matrix, nodes) {
   const paths3 = random(paths2, database);
   // const paths4 = unblock(paths3, matrix, nodes);
   const [paths5, matrix2] = update(paths3, paths, matrix, nodes);
+  const heatmap = heatmapf(paths5);
   refresh(paths5);
   tick += 1;
   console.log(tick);
+  console.log(paths5);
   if (!timeout) {
     var timeout = setTimeout(gg = () => { routine(paths5, virgin2, matrix2, nodes); }, clock);
   }
