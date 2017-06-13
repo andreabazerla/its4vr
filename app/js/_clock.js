@@ -5,13 +5,14 @@ let clock = 1000 / 3;
 let background = '#ffffff';
 let highways = '#000000';
 let stroke = 0;
-let clock2 = 3;
+const clock2 = 3;
 let densityIndex = 1;
 let speedIndex = 1;
 let fluxIndex = 1;
 let pollutionIndex = 1;
+let lengthIndex = 1;
 
-const FizzyText = function(clock2, background, highways, stroke, densityIndex, speedIndex, pollutionIndex) {
+const FizzyText = function(clock2, background, highways, stroke, densityIndex, speedIndex, pollutionIndex, lengthIndex) {
   this.clock = clock2;
   this.background = background;
   this.highways = highways;
@@ -19,9 +20,10 @@ const FizzyText = function(clock2, background, highways, stroke, densityIndex, s
   this.densityIndex = densityIndex;
   this.speedIndex = speedIndex;
   this.pollutionIndex = pollutionIndex;
+  this.lengthIndex = lengthIndex;
 };
 
-const text = new FizzyText(clock2, background, highways, stroke, densityIndex, speedIndex, pollutionIndex);
+const text = new FizzyText(clock2, background, highways, stroke, densityIndex, speedIndex, pollutionIndex, lengthIndex);
 const gui = new dat.GUI({
   load: JSON,
   preset: 'Default'
@@ -72,6 +74,12 @@ controls.add(text, 'pollutionIndex').min(0).max(1).step(0.01)
   },
 );
 
+controls.add(text, 'lengthIndex').min(0).max(1).step(0.01)
+  .onChange((value) => {
+    lengthIndex = value;
+  },
+);
+
 gui.remember(text);
 
 const g = Parser.getMap(Parser.getPlacemarks(map, 1), 0);
@@ -108,6 +116,16 @@ for (const cell of cells) {
   pollution.set(cell.id, 0);
 }
 
+const getMaxLength = (paths) => {
+  let maxLength = 0;
+  for (let i = 0; i < paths.length; i += 1) {
+    maxLength = Math.max(paths[i].length, maxLength);
+  }
+  return maxLength;
+};
+
+const maxRealLength = getMaxLength(pathsP);
+
 let maxPollution = 0;
 let maxLength = 0;
 /**
@@ -127,6 +145,8 @@ const update = (paths, oldPaths, matrix, nodes) => {
   let speed = 0;
   let flux = 0;
   let normPollution = 0;
+  let length = 0;
+  let normLength = 0;
   for (let i = 0; i < paths.length; i += 1) {
     for (let j = 1; j < paths[i].cells.length - 1; j += 1) {
       let alive2 = pollution.get(paths[i].cells[j].id);
@@ -147,21 +167,11 @@ const update = (paths, oldPaths, matrix, nodes) => {
     paths[i].density = density;
     paths[i].speed = speed;
     paths[i].flux = flux;
-    if (paths[i].cells.length > maxLength) maxLength = paths[i].cells.length;
-    if (totAlive > maxPollution) maxPollution = totAlive;
+    maxPollution = Math.max(totAlive, maxPollution);
     normPollution = 1 - (totAlive / maxPollution);
-    // let normPollution2 = 0;
-    // const normLength = paths[i].cells.length / maxLength;
-    // if (normPollution > 0) {
-    // normPollution2 = (normPollution + (1 - normLength)) / 2;
-    //  normPollution2 = normPollution;
-    // } else {
-    //  normPollution2 = normPollution;
-    // }
-    // normPollution2 = normPollution;
-    // console.log(i + ' ' + normPollution);
+    normLength = 1 - (paths[i].length / maxRealLength);
     paths[i].pollution = normPollution;
-    const index = Math.round((((density * densityIndex) + (speed * speedIndex) + (normPollution * pollutionIndex)) / (((densityIndex + speedIndex + pollutionIndex)))) * 100) / 100;
+    const index = Math.round((((density * densityIndex) + (speed * speedIndex) + (normPollution * pollutionIndex) + (normLength * lengthIndex)) / (((densityIndex + speedIndex + pollutionIndex + lengthIndex)))) * 100) / 100;
     paths[i].index = index;
     console.log(i + ' ' + Math.round(index * 100) + '%');
     for (const A of nodes) {
@@ -170,7 +180,7 @@ const update = (paths, oldPaths, matrix, nodes) => {
           matrix[paths[i].B.j][paths[i].A.i].density = density;
           matrix[paths[i].B.j][paths[i].A.i].speed = speed;
           matrix[paths[i].B.j][paths[i].A.i].flux = flux;
-          matrix[paths[i].B.j][paths[i].A.i].pollution = pollution;
+          matrix[paths[i].B.j][paths[i].A.i].pollution = normPollution;
           matrix[paths[i].B.j][paths[i].A.i].index = index;
         }
       }
@@ -395,6 +405,7 @@ function routine(paths, virgin, matrix, nodes) {
   tick += 1;
   console.log(tick);
   console.log(paths5);
+  console.log(matrix2);
   if (!timeout) {
     var timeout = setTimeout(gg = () => { routine(paths5, virgin2, matrix2, nodes); }, clock);
   }

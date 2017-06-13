@@ -118,7 +118,7 @@ module.exports = {
   getMatrix(ways, points, g, key) {
     const paths = [];
     const matrix = [];
-    while (matrix.push([]) < 50);
+    while (matrix.push([]) < points.length);
 
     let i = 0;
     let j = 0;
