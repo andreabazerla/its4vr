@@ -321,45 +321,39 @@ const resetf = (paths) => {
   return paths;
 };
 
-// const unblock = (paths, matrix) => {
-//   for (const path of paths) {
-//     if (path.priority === 0) {
-//       path.cells.slice(-1)[0].alive = false;
-//     }
-//     if (path.cells[1].alive === false) {
-//       for (const path2 of paths) {
-//         if (path2.priority >= 0) {
-//           if (path.A.x1 === path2.B.x2 && path.A.y1 === path2.B.y2) {
-//             if (path2.cells[path2.cells.length - 2].alive === true) {
-//               path.cells[0].alive = true;
-//             }
-//           }
-//         }
-//       }
-//     }
-//   }
-//   return paths;
-// };
-
 const unblock = (paths, matrix, nodes) => {
-  const map2 = new Map();
-  const map3 = new Map();
   for (const path of paths) {
-    if (path.priority === 0) {
-      path.cells.slice(-1)[0].unit.alive = false;
+    let lowID = 0;
+    if (path.cells.slice(-1)[0].unit.alive === true) {
+      const destination = path.cells.slice(-1)[0].unit.destination;
+      for (const cell of path.cells) {
+        if (destination === cell.id) {
+          const pathDest = path.ID;
+          break;
+        }
+      }
+      let low = 0;
+      for (const path2 of paths) {
+        let id = 0;
+        for (const row of matrix[path2.ID]) {
+          id += 1;
+          if (row !== null) {
+            if (id === path.ID) {
+              console.log('lowID');
+              if (row.index > low) {
+                lowID = id;
+              }
+            }
+          }
+        }
+        id = 0;
+        low = 0;
+        if (paths[lowID].cells[0].unit.alive === false) {
+          path.cells.slice(-1)[0].unit.alive = false;
+          paths[lowID].cells[1].unit.alive = true;
+        }
+      }
     }
-    // for (const A of nodes) {
-    //   for (const B of nodes) {
-    //     if (path.A.x1 === A.lat && path.A.y1 === A.lon && path.B.x2 === B.lat && path.B.y2 === B.lon) {
-    //       map2.set([path.B.j, path.A.i], matrix[path.B.j][path.A.i].density);
-    //     }
-    //   }
-    // }
-    // for (const path of paths) {
-    //   if (path.cells[1].alive === false) {
-    //     console.log(path);
-    //   }
-    // }
   }
   return paths;
 };
@@ -398,8 +392,8 @@ function routine(paths, virgin, matrix, nodes) {
   const virgin2 = resetf(JSON.parse(JSON.stringify(virgin)));
   const paths2 = upgrade(paths, virgin2);
   const paths3 = random(paths2, database);
-  // const paths4 = unblock(paths3, matrix, nodes);
-  const [paths5, matrix2] = update(paths3, paths, matrix, nodes);
+  const paths4 = unblock(paths3, matrix, nodes);
+  const [paths5, matrix2] = update(paths4, paths, matrix, nodes);
   const heatmap = heatmapf(paths5);
   refresh(paths5);
   tick += 1;
