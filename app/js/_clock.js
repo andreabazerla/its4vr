@@ -177,11 +177,11 @@ const update = (paths, oldPaths, matrix, nodes) => {
     for (const A of nodes) {
       for (const B of nodes) {
         if (paths[i].A.x1 === A.lat && paths[i].A.y1 === A.lon && paths[i].B.x2 === B.lat && paths[i].B.y2 === B.lon) {
-          matrix[paths[i].B.j][paths[i].A.i].density = density;
-          matrix[paths[i].B.j][paths[i].A.i].speed = speed;
-          matrix[paths[i].B.j][paths[i].A.i].flux = flux;
-          matrix[paths[i].B.j][paths[i].A.i].pollution = normPollution;
-          matrix[paths[i].B.j][paths[i].A.i].index = index;
+          matrix[paths[i].A.i][paths[i].B.j].density = density;
+          matrix[paths[i].A.i][paths[i].B.j].speed = speed;
+          matrix[paths[i].A.i][paths[i].B.j].flux = flux;
+          matrix[paths[i].A.i][paths[i].B.j].pollution = normPollution;
+          matrix[paths[i].A.i][paths[i].B.j].index = index;
         }
       }
     }
@@ -323,36 +323,45 @@ const resetf = (paths) => {
 
 const unblock = (paths, matrix, nodes) => {
   for (const path of paths) {
-    let lowID = 0;
-    if (path.cells.slice(-1)[0].unit.alive === true) {
-      const destination = path.cells.slice(-1)[0].unit.destination;
-      for (const cell of path.cells) {
-        if (destination === cell.id) {
-          const pathDest = path.ID;
-          break;
-        }
-      }
-      let low = 0;
+    // let lowID = 0;
+    const length = path.cells.length - 2;
+    if (path.cells[length].unit.alive === true) {
+      const destination = path.cells[length].unit.destination;
+      let ok = false;
       for (const path2 of paths) {
-        let id = 0;
-        for (const row of matrix[path2.ID]) {
-          id += 1;
-          if (row !== null) {
-            if (id === path.ID) {
-              console.log('lowID');
-              if (row.index > low) {
-                lowID = id;
-              }
-            }
+        for (const cell of path2.cells) {
+          if (destination === cell.id) {
+            console.log('OK');
+            const pathNodeDest = path.B.j;
+            ok = true;
+            break;
+          }
+          if (ok) {
+            break;
           }
         }
-        id = 0;
-        low = 0;
-        if (paths[lowID].cells[0].unit.alive === false) {
-          path.cells.slice(-1)[0].unit.alive = false;
-          paths[lowID].cells[1].unit.alive = true;
-        }
       }
+    //   let low = 0;
+    //   for (const path2 of paths) {
+    //     let id = 0;
+    //     for (const row of matrix[path2.ID]) {
+    //       id += 1;
+    //       if (row !== null) {
+    //         if (id === path.ID) {
+    //           console.log('lowID');
+    //           if (row.index > low) {
+    //             lowID = id;
+    //           }
+    //         }
+    //       }
+    //     }
+    //     id = 0;
+    //     low = 0;
+    //     if (paths[lowID].cells[0].unit.alive === false) {
+    //       path.cells.slice(-1)[0].unit.alive = false;
+    //       paths[lowID].cells[1].unit.alive = true;
+    //     }
+    //   }
     }
   }
   return paths;

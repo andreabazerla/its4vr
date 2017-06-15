@@ -255,7 +255,7 @@ module.exports = {
                 index,
               });
 
-              matrix[j][i] = {
+              matrix[i][j] = {
                 length,
                 density,
                 speed,
