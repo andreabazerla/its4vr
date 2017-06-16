@@ -326,12 +326,38 @@ const unblock = (paths, matrix, nodes) => {
     const length = path.cells.length - 2;
     if (path.cells[length].unit.alive === true) {
       if (matrix[path.B.j].length > 0) {
+        const Q = nodes.slice();
+        let nodesLength = nodes.length;
+        const dist = [];
+        const prev = [];
+        const INFINITY = 1 / 0;
+        const UNDEFINED = undefined;
+        while (nodesLength -= 1) {
+          dist.push(INFINITY);
+          prev.push(UNDEFINED);
+        }
+        dist[path.B.j] = 0;
+        console.log(Q);
+        let minLength = null;
+        let idMin = null;
+        for (let i = Q.length; i > 0; i -= 1) {
+          for (const row of matrix[path.B.j]) {
+            if (row !== null) {
+              // minLength = Math.min(min, row.length);
+              if (minLength === null || minLength.length > row.length) {
+                minLength = row;
+                idMin = path.B.j;
+              }
+            }
+          }
+        }
+        Q.pop(minLength);
+        console.log(Q);
         const destination = path.cells[length].unit.destination;
         let ok = false;
         for (const path2 of paths) {
           for (const cell of path2.cells) {
             if (destination === cell.id) {
-              console.log('OK');
               const pathNodeDest = path2.B.j;
               ok = true;
               break;
@@ -339,11 +365,6 @@ const unblock = (paths, matrix, nodes) => {
             if (ok) {
               break;
             }
-          }
-        }
-        let destArr = [];
-        for (const row of matrix[path.B.j]) {
-          if (row !== null) {
           }
         }
       }
@@ -392,8 +413,6 @@ function routine(paths, virgin, matrix, nodes) {
   refresh(paths5);
   tick += 1;
   console.log(tick);
-  console.log(paths5);
-  console.log(matrix2);
   if (!timeout) {
     var timeout = setTimeout(gg = () => { routine(paths5, virgin2, matrix2, nodes); }, clock);
   }
