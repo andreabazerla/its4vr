@@ -323,45 +323,30 @@ const resetf = (paths) => {
 
 const unblock = (paths, matrix, nodes) => {
   for (const path of paths) {
-    // let lowID = 0;
     const length = path.cells.length - 2;
     if (path.cells[length].unit.alive === true) {
-      const destination = path.cells[length].unit.destination;
-      let ok = false;
-      for (const path2 of paths) {
-        for (const cell of path2.cells) {
-          if (destination === cell.id) {
-            console.log('OK');
-            const pathNodeDest = path.B.j;
-            ok = true;
-            break;
+      if (matrix[path.B.j].length > 0) {
+        const destination = path.cells[length].unit.destination;
+        let ok = false;
+        for (const path2 of paths) {
+          for (const cell of path2.cells) {
+            if (destination === cell.id) {
+              console.log('OK');
+              const pathNodeDest = path2.B.j;
+              ok = true;
+              break;
+            }
+            if (ok) {
+              break;
+            }
           }
-          if (ok) {
-            break;
+        }
+        let destArr = [];
+        for (const row of matrix[path.B.j]) {
+          if (row !== null) {
           }
         }
       }
-    //   let low = 0;
-    //   for (const path2 of paths) {
-    //     let id = 0;
-    //     for (const row of matrix[path2.ID]) {
-    //       id += 1;
-    //       if (row !== null) {
-    //         if (id === path.ID) {
-    //           console.log('lowID');
-    //           if (row.index > low) {
-    //             lowID = id;
-    //           }
-    //         }
-    //       }
-    //     }
-    //     id = 0;
-    //     low = 0;
-    //     if (paths[lowID].cells[0].unit.alive === false) {
-    //       path.cells.slice(-1)[0].unit.alive = false;
-    //       paths[lowID].cells[1].unit.alive = true;
-    //     }
-    //   }
     }
   }
   return paths;
