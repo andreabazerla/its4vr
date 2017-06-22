@@ -327,32 +327,43 @@ const unblock = (paths, matrix, nodes) => {
     if (path.cells[length].unit.alive === true) {
       if (matrix[path.B.j].length > 0) {
         const Q = nodes.slice();
-        let nodesLength = nodes.length;
         const dist = [];
         const prev = [];
         const INFINITY = 1 / 0;
         const UNDEFINED = undefined;
-        while (nodesLength -= 1) {
+        for (let i = Q.length; i > 0; i -= 1) {
           dist.push(INFINITY);
           prev.push(UNDEFINED);
         }
         dist[path.B.j] = 0;
-        console.log(Q);
-        let minLength = null;
+        let u = null;
         let idMin = null;
-        for (let i = Q.length; i > 0; i -= 1) {
-          for (const row of matrix[path.B.j]) {
-            if (row !== null) {
-              // minLength = Math.min(min, row.length);
-              if (minLength === null || minLength.length > row.length) {
-                minLength = row;
-                idMin = path.B.j;
+        let QLength = Q.length;
+        while (Q.length > 0) {
+          for (let j = 0; j < matrix[path.B.j].length; j += 1) {
+            if (matrix[path.B.j][j] !== null) {
+              if (u === null || u.length > matrix[path.B.j][j].length) {
+                u = matrix[path.B.j][j];
+                console.log(u);
+                idMin = j;
+                console.log(idMin);
+                Q.pop(u);
+                QLength -= 1;
+                for (const row2 of matrix[idMin]) {
+                  if (row2 !== null) {
+                    const alt = dist[idMin] + dist[idMin].length;
+                    if (alt < dist[row2]) {
+                      dist[idMin] = alt;
+                      prev[idMin] = u;
+                    }
+                  }
+                }
               }
             }
           }
         }
-        Q.pop(minLength);
-        console.log(Q);
+        // console.log(dist);
+        // console.log(prev);
         const destination = path.cells[length].unit.destination;
         let ok = false;
         for (const path2 of paths) {
@@ -370,6 +381,7 @@ const unblock = (paths, matrix, nodes) => {
       }
     }
   }
+  console.log(matrix);
   return paths;
 };
 
