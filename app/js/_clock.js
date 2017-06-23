@@ -12,7 +12,7 @@ let fluxIndex = 1;
 let pollutionIndex = 1;
 let lengthIndex = 1;
 
-const FizzyText = function(clock2, background, highways, stroke, densityIndex, speedIndex, pollutionIndex, lengthIndex) {
+const FizzyText = function (clock2, background, highways, stroke, densityIndex, speedIndex, pollutionIndex, lengthIndex) {
   this.clock = clock2;
   this.background = background;
   this.highways = highways;
@@ -322,11 +322,12 @@ const resetf = (paths) => {
 };
 
 const unblock = (paths, matrix, nodes) => {
+  console.log(matrix);
   for (const path of paths) {
-    const length = path.cells.length - 2;
-    if (path.cells[length].unit.alive === true) {
+    const last_cell = path.cells.length - 2;
+    if (path.cells[last_cell].unit.alive === true) {
       if (matrix[path.B.j].length > 0) {
-        const Q = nodes.slice();
+        const Q = JSON.parse(JSON.stringify(nodes));
         const dist = [];
         const prev = [];
         const INFINITY = 1 / 0;
@@ -337,33 +338,40 @@ const unblock = (paths, matrix, nodes) => {
         }
         dist[path.B.j] = 0;
         let u = null;
-        let idMin = null;
+        let idu = null;
         let QLength = Q.length;
-        while (Q.length > 0) {
-          for (let j = 0; j < matrix[path.B.j].length; j += 1) {
-            if (matrix[path.B.j][j] !== null) {
-              if (u === null || u.length > matrix[path.B.j][j].length) {
-                u = matrix[path.B.j][j];
-                console.log(u);
-                idMin = j;
-                console.log(idMin);
-                Q.pop(u);
-                QLength -= 1;
-                for (const row2 of matrix[idMin]) {
-                  if (row2 !== null) {
-                    const alt = dist[idMin] + dist[idMin].length;
-                    if (alt < dist[row2]) {
-                      dist[idMin] = alt;
-                      prev[idMin] = u;
-                    }
+        let objectLength = 0;
+
+        /*
+        for (let c = 0; c < QLength ; c++) {
+          if (matrix[path.B.j][c] !== null)
+            objectLength += 1;
+        }
+        */
+        for (let j = 0; j < QLength; j += 1) {
+          debugger;
+          if (matrix[path.B.j][j] !== null) {
+            if (u === null || (u !== null &&  matrix[path.B.j][idu].length > matrix[path.B.j][j].length)) {
+              u = Q[j];//u = matrix[path.B.j][j];
+              idu = j;
+              dist[idu] = matrix[path.B.j][j].length;
+              Q[j] = null;
+              QLength -= 1;
+              //for (const row2 of matrix[idu]) {
+              for (let i = 0; i < matrix[idu].length; i += 1) {
+                if (matrix[idu][i] !== null) {
+                  const alt = dist[idu] + matrix[path.B.j][idu].length;
+                  if (alt < dist[i]) {
+                    dist[i] = alt;
+                    prev[i] = idu;
                   }
                 }
               }
             }
           }
         }
-        // console.log(dist);
-        // console.log(prev);
+        console.log(dist);
+        console.log(prev);
         const destination = path.cells[length].unit.destination;
         let ok = false;
         for (const path2 of paths) {
@@ -420,7 +428,7 @@ function routine(paths, virgin, matrix, nodes) {
   const paths2 = upgrade(paths, virgin2);
   const paths3 = random(paths2, database);
   const paths4 = unblock(paths3, matrix, nodes);
-  const [paths5, matrix2] = update(paths4, paths, matrix, nodes);
+  const [paths5, matrix2] = update(paths3, paths, matrix, nodes);
   const heatmap = heatmapf(paths5);
   refresh(paths5);
   tick += 1;

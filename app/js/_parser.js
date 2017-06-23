@@ -60,8 +60,9 @@ module.exports = {
         if (check.indexOf(point[k]) === -1) {
           check.push(point[k]);
           nodes.push(Point);
+          ID += 1;
         }
-        ID += 1;
+        
       }
       if (key === 0) {
         path.setAttributeNS(null, 'd', `M ${coordinates}`);
