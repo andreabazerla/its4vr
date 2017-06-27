@@ -1,5 +1,5 @@
 const Parser = require('./_parser');
-const map = require('../json/test-1.json');
+const map = require('../json/test-2.json');
 
 let clock = 1000 / 3;
 let background = '#ffffff';
@@ -96,10 +96,10 @@ const database = new Set();
 
 const active = new Map();
 active.set(0, 0.50);
-active.set(16, 0.10);
+//active.set(16, 0.10);
 
 let dead = [];
-dead.push(45, 14);
+dead.push(171, 61, 163);
 
 const priority = new Map();
 // priority.set(21, -1);
@@ -321,6 +321,35 @@ const resetf = (paths) => {
   return paths;
 };
 
+/**
+* @author Lorenzo Bellani
+* @param {*} start nodo di partenza 
+* @param {*} next prossimo nodo scelto
+* @param {*} dist mappa delle distanzr
+* @param {*} matrix matrice associata
+* @param {*} prev mappa dei perscorsi
+*/
+function hike(start, dist, matrix, prev) {
+  let next = null;
+  if (matrix[start]) {
+    let matrix_length = matrix[start].length;
+    for (let column = 0; column < matrix_length; column += 1) {
+      if (matrix[start][column]) {
+        if (!dist.has(column) || (dist.has(column) && dist.get(column) > dist.get(start) + matrix[start][column].length)) {
+          dist.set(column, dist.get(start) + matrix[start][column].length);
+          let array_nodes = JSON.parse(JSON.stringify(prev.get(start)));
+          array_nodes.push(column);
+          prev.set(column, array_nodes);
+        }
+        if (next === null || dist.get(next) > dist.get(column)) {
+          next = column;
+        }
+      }
+    }
+    hike(next, dist, matrix, prev);
+  }
+}
+
 const unblock = (paths, matrix, nodes) => {
   console.log(matrix);
   for (const path of paths) {
@@ -328,50 +357,21 @@ const unblock = (paths, matrix, nodes) => {
     if (path.cells[last_cell].unit.alive === true) {
       if (matrix[path.B.j].length > 0) {
         const Q = JSON.parse(JSON.stringify(nodes));
-        const dist = [];
-        const prev = [];
+        let dist = new Map();
+        let prev = new Map
         const INFINITY = 1 / 0;
         const UNDEFINED = undefined;
-        for (let i = Q.length; i > 0; i -= 1) {
-          dist.push(INFINITY);
-          prev.push(UNDEFINED);
-        }
-        dist[path.B.j] = 0;
-        let u = null;
-        let idu = null;
-        let QLength = Q.length;
-        let objectLength = 0;
 
-        /*
-        for (let c = 0; c < QLength ; c++) {
-          if (matrix[path.B.j][c] !== null)
-            objectLength += 1;
-        }
-        */
-        for (let j = 0; j < QLength; j += 1) {
-          debugger;
-          if (matrix[path.B.j][j] !== null) {
-            if (u === null || (u !== null &&  matrix[path.B.j][idu].length > matrix[path.B.j][j].length)) {
-              u = Q[j];//u = matrix[path.B.j][j];
-              idu = j;
-              dist[idu] = matrix[path.B.j][j].length;
-              Q[j] = null;
-              QLength -= 1;
-              //for (const row2 of matrix[idu]) {
-              for (let i = 0; i < matrix[idu].length; i += 1) {
-                if (matrix[idu][i] !== null) {
-                  const alt = dist[idu] + matrix[path.B.j][idu].length;
-                  if (alt < dist[i]) {
-                    dist[i] = alt;
-                    prev[i] = idu;
-                  }
-                }
-              }
-            }
-          }
-        }
+        dist.set(path.B.j, 0);
+        prev.set(path.B.j, [path.B.j]);
+        hike(path.B.j, dist, matrix, prev);
+
+        debugger;
+        console.log("DISTANZE: ");
         console.log(dist);
+        console.log("PERCORSO: ");
         console.log(prev);
+        debugger;
         const destination = path.cells[length].unit.destination;
         let ok = false;
         for (const path2 of paths) {
