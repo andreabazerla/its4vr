@@ -173,7 +173,7 @@ const update = (paths, oldPaths, matrix, nodes) => {
     paths[i].pollution = normPollution;
     const index = Math.round((((density * densityIndex) + (speed * speedIndex) + (normPollution * pollutionIndex) + (normLength * lengthIndex)) / (((densityIndex + speedIndex + pollutionIndex + lengthIndex)))) * 100) / 100;
     paths[i].index = index;
-    console.log(i + ' ' + Math.round(index * 100) + '%');
+    // console.log(i + ' ' + Math.round(index * 100) + '%');
     for (const A of nodes) {
       for (const B of nodes) {
         if (paths[i].A.x1 === A.lat && paths[i].A.y1 === A.lon && paths[i].B.x2 === B.lat && paths[i].B.y2 === B.lon) {
@@ -192,7 +192,6 @@ const update = (paths, oldPaths, matrix, nodes) => {
     flux = 0;
     changed = 0;
   }
-  console.log('----------------------');
   return [paths, matrix];
 };
 
@@ -351,12 +350,27 @@ function hike(start, dist, matrix, prev) {
 }
 
 const unblock = (paths, matrix, nodes) => {
-  console.log(matrix);
   for (const path of paths) {
-    const last_cell = path.cells.length - 2;
-    if (path.cells[last_cell].unit.alive === true) {
+    const lastCell = path.cells.length - 2;
+    if (path.cells[lastCell].unit.alive === true) {
+      const destination = path.cells[lastCell].unit.destination;
+      let ok = false;
+      let pathNodeDest = null;
+      for (const path2 of paths) {
+        for (const cell of path2.cells) {
+          if (destination === cell.id) {
+            pathNodeDest = path2.B.j;
+            ok = true;
+            break;
+          }
+          if (ok) {
+            break;
+          }
+        }
+      }
       if (matrix[path.B.j].length > 0) {
         const Q = JSON.parse(JSON.stringify(nodes));
+
         let dist = new Map();
         let prev = new Map
         dist.set(path.B.j, 0);
@@ -367,11 +381,10 @@ const unblock = (paths, matrix, nodes) => {
         console.log(dist);
         console.log("PERCORSO: ");
         console.log(prev);
-        debugger;
 
+        debugger;
         const destination = path.cells[length].unit.destination;
         const next_step = prev.get(destination);
-
         let ok = false;
         for (const path2 of paths) {
           for (const cell of path2.cells) {
@@ -385,10 +398,10 @@ const unblock = (paths, matrix, nodes) => {
             }
           }
         }
+
       }
     }
   }
-  console.log(matrix);
   return paths;
 };
 
@@ -431,7 +444,6 @@ function routine(paths, virgin, matrix, nodes) {
   const heatmap = heatmapf(paths5);
   refresh(paths5);
   tick += 1;
-  console.log(tick);
   if (!timeout) {
     var timeout = setTimeout(gg = () => { routine(paths5, virgin2, matrix2, nodes); }, clock);
   }
