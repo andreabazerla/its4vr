@@ -359,20 +359,19 @@ const unblock = (paths, matrix, nodes) => {
         const Q = JSON.parse(JSON.stringify(nodes));
         let dist = new Map();
         let prev = new Map
-        const INFINITY = 1 / 0;
-        const UNDEFINED = undefined;
-
         dist.set(path.B.j, 0);
         prev.set(path.B.j, [path.B.j]);
         hike(path.B.j, dist, matrix, prev);
 
-        debugger;
         console.log("DISTANZE: ");
         console.log(dist);
         console.log("PERCORSO: ");
         console.log(prev);
         debugger;
+
         const destination = path.cells[length].unit.destination;
+        const next_step = prev.get(destination);
+
         let ok = false;
         for (const path2 of paths) {
           for (const cell of path2.cells) {
