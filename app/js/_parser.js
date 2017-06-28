@@ -133,6 +133,16 @@ module.exports = {
     for (const way of ways) {
       for (const q of points) {
         for (const qq of points) {
+
+          matrix[i][j] = {
+            length,
+            density,
+            speed,
+            flux,
+            pollution,
+            index,
+          };
+
           for (let l = 0; l + 1 < (way.points).length; l += 1) {
             const h = k + 1;
             const x1 = Number.parseFloat(way.points[k].lat, 10);
@@ -257,14 +267,14 @@ module.exports = {
                 index,
               });
 
-              matrix[i][j] = {
-                length,
-                density,
-                speed,
-                flux,
-                pollution,
-                index,
-              };
+              // matrix[i][j] = {
+              //   length,
+              //   density,
+              //   speed,
+              //   flux,
+              //   pollution,
+              //   index,
+              // };
 
               ID += 1;
             }
