@@ -92,11 +92,12 @@ gui.remember(text);
 
 const g = Parser.getMap(Parser.getPlacemarks(map, 1), 0);
 const nodes = Parser.getMap(Parser.getPlacemarks(map, 1), 1);
-const ways = Parser.getMap(Parser.getPlacemarks(map, 1), 2);
-
+console.log(nodes);
+let ways = Parser.getMap(Parser.getPlacemarks(map, 1), 2);
 const paths = Parser.getMatrix(ways, nodes, g, 2);
 const matrix = Parser.getMatrix(ways, nodes, g, 1);
-console.log(matrix);
+ways = Parser.getMatrix(ways, nodes, g, 0);
+console.log(ways);
 const cells = Parser.getCells(paths, g, 0);
 
 const pathsP = JSON.parse(JSON.stringify(paths));

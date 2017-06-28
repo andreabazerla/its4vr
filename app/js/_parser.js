@@ -57,12 +57,11 @@ module.exports = {
           y,
         };
         points.push(Point);
-        if (check.indexOf(point[k]) === -1) {
+        if (check.indexOf(point[k]) === -1 && (k === 0 || k === (point.length - 1))) {
           check.push(point[k]);
           nodes.push(Point);
           ID += 1;
         }
-
       }
       if (key === 0) {
         path.setAttributeNS(null, 'd', `M ${coordinates}`);
@@ -87,6 +86,7 @@ module.exports = {
     if (key === 0) {
       return g;
     } else if (key === 1) {
+      console.log(nodes);
       return nodes;
     } else if (key === 2) {
       return ways;
@@ -121,6 +121,7 @@ module.exports = {
     const paths = [];
     const matrix = [];
     while (matrix.push([]) < points.length);
+    // while (matrix.push([]) < 100);
 
     let i = 0;
     let j = 0;
@@ -129,6 +130,7 @@ module.exports = {
     let w = 0;
     let cells = [];
     let id = 0;
+    let ways2 = [];
 
     for (const way of ways) {
       for (const q of points) {
@@ -281,9 +283,12 @@ module.exports = {
       }
       i = 0;
       w += 1;
+      ways2.push({
+        paths,
+      });
     }
     if (key === 0) {
-      return ways;
+      return ways2;
     } else if (key === 1) {
       return matrix;
     } else if (key === 2) {
