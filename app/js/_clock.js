@@ -96,6 +96,7 @@ const ways = Parser.getMap(Parser.getPlacemarks(map, 1), 2);
 
 const paths = Parser.getMatrix(ways, nodes, g, 2);
 const matrix = Parser.getMatrix(ways, nodes, g, 1);
+console.log(matrix);
 const cells = Parser.getCells(paths, g, 0);
 
 const pathsP = JSON.parse(JSON.stringify(paths));
@@ -317,7 +318,6 @@ const random = (paths, database) => {
             } else {
               cell.unit.type = 0;
             }
-            console.log(cell.unit);
           } else {
             cell.unit.alive = false;
           }
@@ -387,7 +387,7 @@ const unblock = (paths, matrix, nodes) => {
   for (const path of paths) {
     const lastCell = path.cells.length - 2;
     if (path.cells[lastCell+1].unit.alive === true){
-      path.cells[lastCell+1].unit.alive = false;    
+      path.cells[lastCell+1].unit.alive = false;
     }
     if (path.cells[lastCell].unit.alive === true) {
       const destination = path.cells[lastCell].unit.destination;
@@ -417,10 +417,10 @@ const unblock = (paths, matrix, nodes) => {
           prev.set(path.B.j, [path.B.j]);
           hike(path.B.j, dist, matrix, prev);
 
-          console.log("DISTANZE: ");
-          console.log(dist);
-          console.log("PERCORSO: ");
-          console.log(prev);
+          // console.log("DISTANZE: ");
+          // console.log(dist);
+          // console.log("PERCORSO: ");
+          // console.log(prev);
 
           const destination = path.cells[path.cells.length - 2].unit.destination;
           let ok = false;
