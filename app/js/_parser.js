@@ -86,7 +86,6 @@ module.exports = {
     if (key === 0) {
       return g;
     } else if (key === 1) {
-      console.log(nodes);
       return nodes;
     } else if (key === 2) {
       return ways;
@@ -283,7 +282,11 @@ module.exports = {
       }
       i = 0;
       w += 1;
+      const idw = way.i;
+      const points2 = way.points;
       ways2.push({
+        idw,
+        points2,
         paths,
       });
     }
@@ -374,7 +377,7 @@ module.exports = {
 
           data.setAttributeNS(null, 'class', 'data');
           data.setAttributeNS(null, 'id', `data_${id}`);
-          data.innerHTML =`${id}`;
+          data.innerHTML = `${id}`;
 
           g.appendChild(cell);
           cell.appendChild(data);
@@ -402,7 +405,6 @@ module.exports = {
       });
 
       id += 1;
-
     }
     return cells;
   },

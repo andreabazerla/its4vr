@@ -50,9 +50,9 @@
           fill:none;
       }
 
-      .highway:hover {
+      /*.highway:hover {
           stroke-width:5;
-      }
+      }*/
 
       .circle {
         fill: black;
