@@ -103,6 +103,7 @@ const pathsP = JSON.parse(JSON.stringify(paths));
 const database = new Set();
 
 const active = new Map();
+
 active.set(0, 0.50);
 
 const dead = [];
@@ -385,43 +386,20 @@ function hike(start, dist, matrix, prev) {
 const unblock = (paths, matrix, nodes) => {
   for (const path of paths) {
     const lastCell = path.cells.length - 2;
+    if (path.cells[lastCell+1].unit.alive === true){
+      path.cells[lastCell+1].unit.alive = false;    
+    }
     if (path.cells[lastCell].unit.alive === true) {
       const destination = path.cells[lastCell].unit.destination;
-      let ok = false;
-      let pathNodeDest = null;
-      for (const path2 of paths) {
-        for (const cell of path2.cells) {
-          if (destination === cell.id) {
-            pathNodeDest = path2.B.j;
-            ok = true;
-            break;
-          }
-          if (ok) {
-            break;
-          }
-        }
-      }
-      if (matrix[path.B.j].length > 0) {
-        const Q = JSON.parse(JSON.stringify(nodes));
-
-        const dist = new Map();
-        const prev = new Map();
-        dist.set(path.B.j, 0);
-        prev.set(path.B.j, [path.B.j]);
-        hike(path.B.j, dist, matrix, prev);
-
-        // console.log("DISTANZE: ");
-        // console.log(dist);
-        // console.log("PERCORSO: ");
-        // console.log(prev);
-
-        const destination = path.cells[length].unit.destination;
-        const next_step = prev.get(destination);
+      const this_cell = path.cells[lastCell].id;
+      debugger;
+      if (this_cell !== destination-1) {
         let ok = false;
+        let pathNodeDest = null;
         for (const path2 of paths) {
           for (const cell of path2.cells) {
             if (destination === cell.id) {
-              const pathNodeDest = path2.B.j;
+              pathNodeDest = path2.B.j;
               ok = true;
               break;
             }
@@ -430,10 +408,53 @@ const unblock = (paths, matrix, nodes) => {
             }
           }
         }
+        if (matrix[path.B.j].length > 0) {
+          const Q = JSON.parse(JSON.stringify(nodes));
+
+          let dist = new Map();
+          let prev = new Map
+          dist.set(path.B.j, 0);
+          prev.set(path.B.j, [path.B.j]);
+          hike(path.B.j, dist, matrix, prev);
+
+          console.log("DISTANZE: ");
+          console.log(dist);
+          console.log("PERCORSO: ");
+          console.log(prev);
+
+          const destination = path.cells[path.cells.length - 2].unit.destination;
+          let ok = false;
+          for (const path2 of paths) {
+            for (const cell of path2.cells) {
+              if (destination === cell.id) {
+                const pathNodeDest = path2.B.j;
+                ok = true;
+                break;
+              }
+              if (ok) {
+                break;
+              }
+            }
+          }
+
+          const next_step = prev.get(pathNodeDest);
+          const start_node = next_step[0];
+          const next_node = next_step[1];
+          for (const path3 of paths) {
+            if (path3.A.i === start_node && path3.B.j === next_node) {
+              path3.cells[0].unit.destination = destination;
+              path3.cells[0].unit.alive = true;
+              break;
+            }
+          }
+        }
+      }
+      else {
+        //path.cells[lastCell].unit.alive = false;
       }
     }
   }
-  return paths;
+  //return paths;
 };
 
 const block = (paths, matrix) => {
