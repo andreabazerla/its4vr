@@ -62,10 +62,11 @@ module.exports = {
           nodes.push(Point);
           ID += 1;
         }
-        
+
       }
       if (key === 0) {
         path.setAttributeNS(null, 'd', `M ${coordinates}`);
+        path.setAttributeNS(null, 'id', `path_${id}`);
         const data = document.createElementNS('http://www.w3.org/2000/svg', 'title');
         data.setAttributeNS(null, 'class', 'data');
         data.setAttributeNS(null, 'id', `data_${id}`);
@@ -149,7 +150,7 @@ module.exports = {
               const idu = 0;
               let alive = false;
               const destination = null;
-              const type = 0;
+              const type = null;
               const age = 0;
 
               cells.push({
@@ -301,7 +302,7 @@ module.exports = {
       const idu = 0;
       const alive = false;
       const destination = null;
-      const type = 0;
+      const type = null;
       const age = 0;
 
       cells.push({

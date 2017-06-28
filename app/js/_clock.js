@@ -11,8 +11,9 @@ let speedIndex = 1;
 let fluxIndex = 1;
 let pollutionIndex = 1;
 let lengthIndex = 1;
+let typeIndex = 1;
 
-const FizzyText = function (clock2, background, highways, stroke, densityIndex, speedIndex, pollutionIndex, lengthIndex) {
+const FizzyText = function (clock2, background, highways, stroke, densityIndex, speedIndex, pollutionIndex, lengthIndex, typeIndex) {
   this.clock = clock2;
   this.background = background;
   this.highways = highways;
@@ -21,9 +22,10 @@ const FizzyText = function (clock2, background, highways, stroke, densityIndex, 
   this.speedIndex = speedIndex;
   this.pollutionIndex = pollutionIndex;
   this.lengthIndex = lengthIndex;
+  this.typeIndex = typeIndex;
 };
 
-const text = new FizzyText(clock2, background, highways, stroke, densityIndex, speedIndex, pollutionIndex, lengthIndex);
+const text = new FizzyText(clock2, background, highways, stroke, densityIndex, speedIndex, pollutionIndex, lengthIndex, typeIndex);
 const gui = new dat.GUI({
   load: JSON,
   preset: 'Default'
@@ -80,6 +82,12 @@ controls.add(text, 'lengthIndex').min(0).max(1).step(0.01)
   },
 );
 
+controls.add(text, 'typeIndex').min(0).max(1).step(0.01)
+  .onChange((value) => {
+    typeIndex = value;
+  },
+);
+
 gui.remember(text);
 
 const g = Parser.getMap(Parser.getPlacemarks(map, 1), 0);
@@ -95,18 +103,19 @@ const pathsP = JSON.parse(JSON.stringify(paths));
 const database = new Set();
 
 const active = new Map();
-active.set(0, 1);
-//active.set(16, 0.10);
 
-let dead = [];
+active.set(0, 0.50);
+
+const dead = [];
 dead.push(171, 61, 163);
 
-const priority = new Map();
+// const priority = new Map();
 // priority.set(21, -1);
+//
+// for (const [key, value] of priority) {
+//   pathsP[key].priority = value;
+// }
 
-for (const [key, value] of priority) {
-  pathsP[key].priority = value;
-}
 /**
  * @param pollutiown
  * map of cells, any cell identified by id has a number that means how many car pass on it
@@ -150,7 +159,7 @@ const update = (paths, oldPaths, matrix, nodes) => {
   for (let i = 0; i < paths.length; i += 1) {
     for (let j = 1; j < paths[i].cells.length - 1; j += 1) {
       let alive2 = pollution.get(paths[i].cells[j].id);
-      if (paths[i].cells[j].unit.alive === true) {
+      if (paths[i].cells[j].unit.alive === true && paths[i].cells[j].unit.type === 1) {
         alive += 1;
         alive2 += 1;
         pollution.set(paths[i].cells[j].id, alive2);
@@ -185,6 +194,13 @@ const update = (paths, oldPaths, matrix, nodes) => {
         }
       }
     }
+    const lineWeight = (Math.round((1 - index) * 10) / 10) * 10;
+    document.getElementById(`path_${i}`).style.strokeWidth = lineWeight;
+    // document.getElementById(`path_${i}`).style.opacity = lineWeight / 10;
+    const dec = 255 * index;
+    const hex = Number(parseInt(dec, 10)).toString(16);
+    const color = "#" + hex + hex + hex;
+    document.getElementById(`path_${i}`).style.stroke = color;
     alive = 0;
     totAlive = 0;
     density = 0;
@@ -210,10 +226,13 @@ const upgrade = (paths, virgin) => {
             ((virgin[path.ID].cells)[h]).unit.idu = 0;
             ((virgin[path.ID].cells)[p2]).unit.destination = ((path.cells)[h]).unit.destination;
             ((virgin[path.ID].cells)[h]).unit.destination = null;
+            ((virgin[path.ID].cells)[p2]).unit.type = ((path.cells)[h]).unit.type;
+            ((virgin[path.ID].cells)[h]).unit.type = null;
           } else {
             ((virgin[path.ID].cells)[h]).unit.alive = ((path.cells)[h]).unit.alive;
             ((virgin[path.ID].cells)[h]).unit.idu = ((path.cells)[h]).unit.idu;
             ((virgin[path.ID].cells)[h]).unit.destination = ((path.cells)[h]).unit.destination;
+            ((virgin[path.ID].cells)[h]).unit.type = ((path.cells)[h]).unit.type;
           }
         } else {
           if (((path.cells)[p2]).unit.alive === true) {
@@ -222,12 +241,16 @@ const upgrade = (paths, virgin) => {
             ((virgin[path.ID].cells)[p0]).unit.idu = 0;
             ((virgin[path.ID].cells)[h]).unit.destination = ((path.cells)[p0]).unit.destination;
             ((virgin[path.ID].cells)[p0]).unit.destination = null;
+            ((virgin[path.ID].cells)[h]).unit.type = ((path.cells)[p0]).unit.type;
+            ((virgin[path.ID].cells)[p0]).unit.type = null;
           } else {
             ((virgin[path.ID].cells)[h]).unit.alive = true;
             ((virgin[path.ID].cells)[h]).unit.idu = ((path.cells)[p0]).unit.idu;
             ((virgin[path.ID].cells)[p0]).unit.idu = 0;
             ((virgin[path.ID].cells)[h]).unit.destination = ((path.cells)[p0]).unit.destination;
             ((virgin[path.ID].cells)[p0]).unit.destination = null;
+            ((virgin[path.ID].cells)[h]).unit.type = ((path.cells)[p0]).unit.type;
+            ((virgin[path.ID].cells)[p0]).unit.type = null;
           }
         }
       } else {
@@ -238,15 +261,19 @@ const upgrade = (paths, virgin) => {
             ((virgin[path.ID].cells)[h]).unit.idu = 0;
             ((virgin[path.ID].cells)[p2]).unit.destination = ((path.cells)[h]).unit.destination;
             ((virgin[path.ID].cells)[h]).unit.destination = null;
+            ((virgin[path.ID].cells)[p2]).unit.type = ((path.cells)[h]).unit.type;
+            ((virgin[path.ID].cells)[h]).unit.type = null;
           } else {
             ((virgin[path.ID].cells)[h]).unit.alive = ((path.cells)[h]).unit.alive;
             ((virgin[path.ID].cells)[h]).unit.idu = ((path.cells)[h]).unit.idu;
             ((virgin[path.ID].cells)[h]).unit.destination = ((path.cells)[h]).unit.destination;
+            ((virgin[path.ID].cells)[h]).unit.type = ((path.cells)[h]).unit.type;
           }
         } else {
           ((virgin[path.ID].cells)[h]).unit.alive = ((path.cells)[h]).unit.alive;
           ((virgin[path.ID].cells)[h]).unit.idu = ((path.cells)[h]).unit.idu;
           ((virgin[path.ID].cells)[h]).unit.destination = ((path.cells)[h]).unit.destination;
+          ((virgin[path.ID].cells)[h]).unit.type = ((path.cells)[h]).unit.type;
         }
       }
     }
@@ -280,10 +307,17 @@ const random = (paths, database) => {
           } else {
             id = 0;
           }
+          const rand2 = (Math.random() + typeIndex) / 2;
           if (rand < limit && path.cells[1].unit.alive === false) {
-            cell.unit.alive = true;
             cell.unit.idu = id;
+            cell.unit.alive = true;
             cell.unit.destination = dead[Math.floor(Math.random() * dead.length)];
+            if (rand2 > 0.5) {
+              cell.unit.type = 1;
+            } else {
+              cell.unit.type = 0;
+            }
+            console.log(cell.unit);
           } else {
             cell.unit.alive = false;
           }
@@ -322,7 +356,7 @@ const resetf = (paths) => {
 
 /**
 * @author Lorenzo Bellani
-* @param {*} start nodo di partenza 
+* @param {*} start nodo di partenza
 * @param {*} next prossimo nodo scelto
 * @param {*} dist mappa delle distanzr
 * @param {*} matrix matrice associata
