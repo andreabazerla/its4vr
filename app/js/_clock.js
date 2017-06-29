@@ -7,6 +7,7 @@ let highways = '#000000';
 let stroke = 0;
 let cellsAlive = '#ff0000';
 let hideCells = false;
+let showWeights = false;
 const clock2 = 3;
 let densityIndex = 1;
 let speedIndex = 1;
@@ -15,25 +16,28 @@ let pollutionIndex = 1;
 let lengthIndex = 1;
 let typeIndex = 1;
 let historyPollution = 100;
-let factorPollution = 10;
+let increasePollution = 10;
+let decreasePollution = 1;
 
-const FizzyText = function (clock2, background, highways, stroke, cellsAlive, hideCells, densityIndex, speedIndex, pollutionIndex, lengthIndex, typeIndex, historyPollution, factorPollution) {
+const FizzyText = function (clock2, background, highways, stroke, cellsAlive, hideCells, showWeights, densityIndex, speedIndex, pollutionIndex, lengthIndex, typeIndex, historyPollution, increasePollution, decreasePollution) {
   this.clock = clock2;
   this.background = background;
   this.highways = highways;
   this.stroke = stroke;
   this.cellsAlive = cellsAlive;
   this.hideCells = hideCells;
+  this.showWeights = showWeights;
   this.densityIndex = densityIndex;
   this.speedIndex = speedIndex;
   this.pollutionIndex = pollutionIndex;
   this.lengthIndex = lengthIndex;
   this.typeIndex = typeIndex;
   this.historyPollution = historyPollution;
-  this.factorPollution = factorPollution;
+  this.increasePollution = increasePollution;
+  this.decreasePollution = decreasePollution;
 };
 
-const text = new FizzyText(clock2, background, highways, stroke, cellsAlive, hideCells, densityIndex, speedIndex, pollutionIndex, lengthIndex, typeIndex, historyPollution, factorPollution);
+const text = new FizzyText(clock2, background, highways, stroke, cellsAlive, hideCells, showWeights, densityIndex, speedIndex, pollutionIndex, lengthIndex, typeIndex, historyPollution, increasePollution, decreasePollution);
 const gui = new dat.GUI({
   load: JSON,
   preset: 'Default'
@@ -63,6 +67,10 @@ style.addColor(text, 'cellsAlive').onChange((value) => {
 
 style.add(text, 'hideCells').onChange((value) => {
   hideCells = value;
+});
+
+style.add(text, 'showWeights').onChange((value) => {
+  showWeights = value;
 });
 
 style.open();
@@ -110,9 +118,15 @@ controls.add(text, 'historyPollution').step(1)
   },
 );
 
-controls.add(text, 'factorPollution').step(1)
+controls.add(text, 'increasePollution').step(1)
   .onChange((value) => {
-    factorPollution = value;
+    increasePollution = value;
+  },
+);
+
+controls.add(text, 'decreasePollution').step(1)
+  .onChange((value) => {
+    decreasePollution = value;
   },
 );
 
@@ -227,13 +241,18 @@ const update = (paths, oldPaths, matrix, nodes) => {
         }
       }
     }
-    const lineWeight = (Math.round((1 - index) * 10) / 10) * 10;
-    document.getElementById(`path_${i}`).style.strokeWidth = lineWeight;
-    // document.getElementById(`path_${i}`).style.opacity = lineWeight / 10;
-    const dec = 255 * index;
-    const hex = Number(parseInt(dec, 10)).toString(16);
-    const color = "#" + hex + hex + hex;
-    document.getElementById(`path_${i}`).style.stroke = color;
+    if (showWeights) {
+      const lineWeight = (Math.round((1 - index) * 10) / 10) * 10;
+      document.getElementById(`path_${i}`).style.strokeWidth = lineWeight;
+      document.getElementById(`path_${i}`).style.opacity = lineWeight / 10;
+      // const dec = 255 * index;
+      // const hex = Number(parseInt(dec, 10)).toString(16);
+      // const color = "#" + hex + hex + hex;
+      // document.getElementById(`path_${i}`).style.stroke = color;
+    } else {
+      document.getElementById(`path_${i}`).style.strokeWidth = 1;
+      document.getElementById(`path_${i}`).style.stroke = highways;
+    }
     alive = 0;
     totAlive = 0;
     density = 0;
