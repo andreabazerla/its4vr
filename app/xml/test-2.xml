@@ -209,6 +209,21 @@
           </coordinates>
         </LineString>
       </Placemark>
+      <Placemark>
+        <name>13</name>
+        <styleUrl>#line-000000-1200-nodesc</styleUrl>
+        <LineString>
+          <tessellate>1</tessellate>
+          <coordinates>
+            10.972783,45.3860146,0
+            10.9716833,45.3861276,0
+            10.97193,45.3858639,0
+            10.9716403,45.3855173,0
+            10.9710664,45.3856077,0
+            10.9710878,45.3853138,0
+          </coordinates>
+        </LineString>
+      </Placemark>
     </Folder>
   </Document>
 </kml>

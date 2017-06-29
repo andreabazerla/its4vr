@@ -92,11 +92,10 @@ gui.remember(text);
 
 const g = Parser.getMap(Parser.getPlacemarks(map, 1), 0);
 const nodes = Parser.getMap(Parser.getPlacemarks(map, 1), 1);
-const ways = Parser.getMap(Parser.getPlacemarks(map, 1), 2);
-
+let ways = Parser.getMap(Parser.getPlacemarks(map, 1), 2);
 const paths = Parser.getMatrix(ways, nodes, g, 2);
 const matrix = Parser.getMatrix(ways, nodes, g, 1);
-console.log(matrix);
+ways = Parser.getMatrix(ways, nodes, g, 0);
 const cells = Parser.getCells(paths, g, 0);
 
 const pathsP = JSON.parse(JSON.stringify(paths));
@@ -392,7 +391,6 @@ const unblock = (paths, matrix, nodes) => {
     if (path.cells[lastCell].unit.alive === true) {
       const destination = path.cells[lastCell].unit.destination;
       const this_cell = path.cells[lastCell].id;
-      debugger;
       if (this_cell !== destination-1) {
         let ok = false;
         let pathNodeDest = null;
@@ -454,7 +452,7 @@ const unblock = (paths, matrix, nodes) => {
       }
     }
   }
-  //return paths;
+  return paths;
 };
 
 const block = (paths, matrix) => {

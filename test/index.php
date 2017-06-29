@@ -50,9 +50,9 @@
           fill:none;
       }
 
-      .highway:hover {
+      /*.highway:hover {
           stroke-width:5;
-      }
+      }*/
 
       .circle {
         fill: black;
@@ -127,12 +127,6 @@
               tooltip[i].style.top = e.pageY + 'px';
           }
       }
-    </script>
-
-    <script type="text/javascript">
-
-
-
     </script>
 
 </body>

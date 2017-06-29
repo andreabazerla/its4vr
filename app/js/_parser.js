@@ -57,12 +57,11 @@ module.exports = {
           y,
         };
         points.push(Point);
-        if (check.indexOf(point[k]) === -1) {
+        if (check.indexOf(point[k]) === -1 && (k === 0 || k === (point.length - 1))) {
           check.push(point[k]);
           nodes.push(Point);
           ID += 1;
         }
-
       }
       if (key === 0) {
         path.setAttributeNS(null, 'd', `M ${coordinates}`);
@@ -121,6 +120,7 @@ module.exports = {
     const paths = [];
     const matrix = [];
     while (matrix.push([]) < points.length);
+    // while (matrix.push([]) < 100);
 
     let i = 0;
     let j = 0;
@@ -129,6 +129,7 @@ module.exports = {
     let w = 0;
     let cells = [];
     let id = 0;
+    let ways2 = [];
 
     for (const way of ways) {
       for (const q of points) {
@@ -281,9 +282,16 @@ module.exports = {
       }
       i = 0;
       w += 1;
+      const idw = way.i;
+      const points2 = way.points;
+      ways2.push({
+        idw,
+        points2,
+        paths,
+      });
     }
     if (key === 0) {
-      return ways;
+      return ways2;
     } else if (key === 1) {
       return matrix;
     } else if (key === 2) {
@@ -369,7 +377,7 @@ module.exports = {
 
           data.setAttributeNS(null, 'class', 'data');
           data.setAttributeNS(null, 'id', `data_${id}`);
-          data.innerHTML =`${id}`;
+          data.innerHTML = `${id}`;
 
           g.appendChild(cell);
           cell.appendChild(data);
@@ -397,7 +405,6 @@ module.exports = {
       });
 
       id += 1;
-
     }
     return cells;
   },
