@@ -109,12 +109,27 @@ active.set(0, 0.50);
 const dead = [];
 dead.push(171, 61, 163);
 
-// const priority = new Map();
-// priority.set(21, -1);
-//
-// for (const [key, value] of priority) {
-//   pathsP[key].priority = value;
-// }
+const priority = new Map();
+priority.set(2, 0);
+priority.set(4, 1);
+priority.set(6, 0);
+priority.set(5, 1);
+priority.set(9, 0);
+priority.set(1, 1);
+
+for (const [key, value] of priority) {
+  pathsP[key].priority = value;
+}
+const cross = [];
+while (cross.push([]) < nodes.length);
+
+for (let i = 0; i < pathsP.length; i += 1) {
+  const B = pathsP[i].B.j;
+  const priorityN = pathsP[i].priority;
+  cross[B][priorityN] = pathsP[i];
+}
+
+console.log(cross);
 
 /**
  * @param pollutiown
