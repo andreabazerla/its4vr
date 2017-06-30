@@ -47,10 +47,10 @@ style.addColor(text, 'background').onChange((value) => {
   document.getElementById('svg').style.background = background;
 });
 
-  style.addColor(text, 'highways').onChange((value) => {
-    highways = value;
-    $('.highway').css('stroke', highways);
-  });
+style.addColor(text, 'highways').onChange((value) => {
+  highways = value;
+  $('.highway').css('stroke', highways);
+});
 
 style.add(text, 'stroke', { Straight: 0, Dotted: 1, Dashed: 5 }).onChange((value) => {
   stroke = value;
@@ -435,51 +435,28 @@ const unblock = (paths, matrix, nodes) => {
     cross[B][priorityN] = paths[i];
   }
 
-  for (const cros of cross) {
-    for (const path of cros) {
-      const lastCell = path.cells.length - 2;
+  for (const path of cross) {
+    let stop = false;
+    for (let i = 0; i < path.length; i += 1) {
+      if (!stop) {
+        const lastCell = path[i].cells.length - 2;
+        console.log(path);
 
-      if (path.cells[lastCell + 1].unit.alive === true) {
-        path.cells[lastCell + 1].unit.alive = false;
-      }
-      if (path.cells[lastCell].unit.alive === true) {
-        const destination = path.cells[lastCell].unit.destination;
-        const this_cell = path.cells[lastCell].id;
-        if (this_cell !== destination - 1) {
-          let ok = false;
-          let pathNodeDest = null;
-          for (const path2 of paths) {
-            for (const cell of path2.cells) {
-              if (destination === cell.id) {
-                pathNodeDest = path2.B.j;
-                ok = true;
-                break;
-              }
-              if (ok) {
-                break;
-              }
-            }
-          }
-          if (matrix[path.B.j].length > 0) {
-            const Q = JSON.parse(JSON.stringify(nodes));
+        if (path[i].cells[lastCell + 1].unit.alive === true) {
+          path[i].cells[lastCell + 1].unit.alive = false;
+        }
 
-            let dist = new Map();
-            let prev = new Map
-            dist.set(path.B.j, 0);
-            prev.set(path.B.j, [path.B.j]);
-            hike(path.B.j, dist, matrix, prev);
-
-            console.log("DISTANZE: ");
-            console.log(dist);
-            console.log("PERCORSO: ");
-            console.log(prev);
-
-            const destination = path.cells[path.cells.length - 2].unit.destination;
+        if (path[i].cells[lastCell].unit.alive === true) {
+          debugger;
+          const destination = path[i].cells[lastCell].unit.destination;
+          const this_cell = path[i].cells[lastCell].id;
+          if (this_cell !== destination - 1) {
             let ok = false;
+            let pathNodeDest = null;
             for (const path2 of paths) {
               for (const cell of path2.cells) {
                 if (destination === cell.id) {
-                  const pathNodeDest = path2.B.j;
+                  pathNodeDest = path2.B.j;
                   ok = true;
                   break;
                 }
@@ -488,31 +465,65 @@ const unblock = (paths, matrix, nodes) => {
                 }
               }
             }
-            const next_step = prev.get(pathNodeDest);
-            const start_node = next_step[0];
-            const next_node = next_step[1];
-            for (const path3 of paths) {
-              if (path3.A.i === start_node && path3.B.j === next_node) {
-                if (!path3.cells[1].unit.alive) {
-                  path3.cells[0].unit.destination = destination;
-                  path3.cells[0].unit.alive = true;
+            if (matrix[path[i].B.j].length > 0) {
+              const Q = JSON.parse(JSON.stringify(nodes));
+
+              let dist = new Map();
+              let prev = new Map
+              dist.set(path[i].B.j, 0);
+              prev.set(path[i].B.j, [path[i].B.j]);
+              hike(path[i].B.j, dist, matrix, prev);
+
+              console.log("DISTANZE: ");
+              console.log(dist);
+              console.log("PERCORSO: ");
+              console.log(prev);
+
+              const destination = path[i].cells[path[i].cells.length - 2].unit.destination;
+              let ok = false;
+              for (const path2 of paths) {
+                for (const cell of path2.cells) {
+                  if (destination === cell.id) {
+                    const pathNodeDest = path2.B.j;
+                    ok = true;
+                    break;
+                  }
+                  if (ok) {
+                    break;
+                  }
                 }
-                else {
-                  path.cells[lastCell + 1].unit.alive = true;
+              }
+              const next_step = prev.get(pathNodeDest);
+              const start_node = next_step[0];
+              const next_node = next_step[1];
+              for (const path3 of paths) {
+                if (path3.A.i === start_node && path3.B.j === next_node) {
+                  if (!path3.cells[1].unit.alive) {
+                    path3.cells[0].unit.destination = destination;
+                    path3.cells[0].unit.alive = true;
+                  }
+                  else {
+                    path[i].cells[lastCell + 1].unit.alive = true;
+                  }
+                  break;
                 }
-                break;
               }
             }
           }
+          /*for (let k = i; k < path.length; k++){
+            path[k].cells[lastCell + 1].unit.alive = true;
+          }
+          break;
+          */
+          stop = true;
         }
-        break;
       }
     }
   }
   let path_to_return = [];
-  for(let c = 0; c < cross.length; c += 1){
-    for(let p = 0; p < c.length; p +=1){
-      path_to_return[c[p].ID]=c[p];
+  for (let c = 0; c < cross.length; c += 1) {
+    for (let p = 0; p < c.length; p += 1) {
+      path_to_return[c[p].ID] = c[p];
     }
   }
   return path_to_return;
