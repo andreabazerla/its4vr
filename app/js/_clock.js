@@ -225,7 +225,7 @@ const update = (paths, oldPaths, matrix, nodes) => {
     paths[i].flux = flux;
     maxPollution = Math.max(totAlive, maxPollution);
     normPollution = 1 - (totAlive / maxPollution);
-    normLength = 1 - (paths[i].length / maxRealLength);
+    normLength = paths[i].length / maxRealLength;
     paths[i].pollution = normPollution;
     const index = Math.round((((density * densityIndex) + (speed * speedIndex) + (normPollution * pollutionIndex) + (normLength * lengthIndex)) / (((densityIndex + speedIndex + pollutionIndex + lengthIndex)))) * 100) / 100;
     paths[i].index = index;
@@ -459,7 +459,6 @@ const unblock = (paths, matrix, nodes) => {
     for (let i = 0; i < path.length; i += 1) {
       if (!stop) {
         const lastCell = path[i].cells.length - 2;
-        console.log(path);
 
         if (path[i].cells[lastCell + 1].unit.alive === true) {
           path[i].cells[lastCell + 1].unit.alive = false;
@@ -493,10 +492,10 @@ const unblock = (paths, matrix, nodes) => {
               prev.set(path[i].B.j, [path[i].B.j]);
               hike(path[i].B.j, dist, matrix, prev);
 
-              console.log("DISTANZE: ");
-              console.log(dist);
-              console.log("PERCORSO: ");
-              console.log(prev);
+              // console.log("DISTANZE: ");
+              // console.log(dist);
+              // console.log("PERCORSO: ");
+              // console.log(prev);
 
               const destination = path[i].cells[path[i].cells.length - 2].unit.destination;
               let ok = false;
@@ -580,6 +579,11 @@ const heatmapf = (paths) => {
   return heatmap;
 };
 
+const removePollution = (paths) => {
+
+  return paths;
+}
+
 let gg = 0;
 function routine(paths, virgin, matrix, nodes) {
   const virgin2 = resetf(JSON.parse(JSON.stringify(virgin)));
@@ -589,9 +593,13 @@ function routine(paths, virgin, matrix, nodes) {
   const [paths5, matrix2] = update(paths4, paths, matrix, nodes);
   const heatmap = heatmapf(paths5);
   refresh(paths5);
+  let paths6 = paths5;
+  if (tick > historyPollution) {
+    paths6 = removePollution(paths5);
+  }
   tick += 1;
   if (!timeout) {
-    var timeout = setTimeout(gg = () => { routine(paths5, virgin2, matrix2, nodes); }, clock);
+    var timeout = setTimeout(gg = () => { routine(paths6, virgin2, matrix2, nodes); }, clock);
   }
 }
 
