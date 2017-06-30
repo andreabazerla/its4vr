@@ -167,7 +167,7 @@ for (const [key, value] of priority) {
  * @param pollutiown
  * map of cells, any cell identified by id has a number that means how many car pass on it
  */
-const pollution = new Map();
+let pollution = new Map();
 for (const cell of cells) {
   pollution.set(cell.id, 0);
 }
@@ -208,8 +208,12 @@ const update = (paths, oldPaths, matrix, nodes) => {
       let alive2 = pollution.get(paths[i].cells[j].id);
       if (paths[i].cells[j].unit.alive === true && paths[i].cells[j].unit.type === 1) {
         alive += 1;
-        alive2 += 1;
-        pollution.set(paths[i].cells[j].id, alive2);
+        alive2 += increasePollution;
+        let alive3 = alive2;
+        if (tick > historyPollution) {
+          alive3 = alive2 - decreasePollution;
+        }
+        pollution.set(paths[i].cells[j].id, alive3);
         paths[i].cells[j].increment = alive2;
       }
       if (oldPaths[i].cells[j].unit.alive === false && paths[i].cells[j].unit.alive === true) {
@@ -557,7 +561,7 @@ const block = (paths, matrix) => {
 
 let f = 0;
 let h = 0;
-let tick = 0;
+var tick = 0;
 
 const heatmapf = (paths) => {
   const heatmap = [];
@@ -576,9 +580,12 @@ const heatmapf = (paths) => {
   return heatmap;
 };
 
-const removePollution = (paths) => {
-
-  return paths;
+const removePollution = (pollution) => {
+  for (let [key, value] of pollution) {
+    value -= decreasePollution;
+    pollution.set(key, value);
+  }
+  return pollution;
 }
 
 let gg = 0;
@@ -587,17 +594,19 @@ function routine(paths, virgin, matrix, nodes) {
   const paths2 = upgrade(paths, virgin2);
   const paths3 = random(paths2, database);
   const paths4 = unblock(paths3, matrix, nodes);
-  console.log(paths4);
   const [paths5, matrix2] = update(paths4, paths, matrix, nodes);
   const heatmap = heatmapf(paths5);
   refresh(paths5);
   let paths6 = paths5;
-  if (tick > historyPollution) {
-    paths6 = removePollution(paths5);
-  }
+  console.log(paths6);
+  console.log(pollution);
+  // if (tick > historyPollution) {
+  //   pollution = removePollution(pollution);
+  //   console.log(pollution);
+  // }
   tick += 1;
   if (!timeout) {
-    var timeout = setTimeout(gg = () => { routine(paths6, virgin2, matrix2, nodes); }, clock);
+    var timeout = setTimeout(gg = () => { routine(paths5, virgin2, matrix2, nodes); }, clock);
   }
 }
 
