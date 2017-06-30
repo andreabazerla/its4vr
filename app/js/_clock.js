@@ -146,8 +146,8 @@ const database = new Set();
 
 const active = new Map();
 
-active.set(0, 0.70);
-active.set(172, 1);
+active.set(0, 0.7);
+active.set(172, 0.7);
 const dead = [];
 dead.push(171, 61, 163);
 
@@ -469,6 +469,7 @@ const unblock = (paths, matrix, nodes) => {
         }
 
         if (path[i].cells[lastCell].unit.alive === true) {
+          //debugger;
           const destination = path[i].cells[lastCell].unit.destination;
           const this_cell = path[i].cells[lastCell].id;
           if (this_cell !== destination - 1) {
@@ -531,11 +532,13 @@ const unblock = (paths, matrix, nodes) => {
               }
             }
           }
-          /*for (let k = i; k < path.length; k++){
-            path[k].cells[lastCell + 1].unit.alive = true;
+          
+          for (let k = i+1; k < path.length; k++){
+            debugger;
+            let invisible = path[k].cells.length-1;
+            path[k].cells[invisible].unit.alive = true;
           }
-          break;
-          */
+                  
           stop = true;
         }
       }
