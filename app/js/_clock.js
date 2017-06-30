@@ -225,7 +225,7 @@ const update = (paths, oldPaths, matrix, nodes) => {
     paths[i].flux = flux;
     maxPollution = Math.max(totAlive, maxPollution);
     normPollution = 1 - (totAlive / maxPollution);
-    normLength = 1 - (paths[i].length / maxRealLength);
+    normLength = paths[i].length / maxRealLength;
     paths[i].pollution = normPollution;
     const index = Math.round((((density * densityIndex) + (speed * speedIndex) + (normPollution * pollutionIndex) + (normLength * lengthIndex)) / (((densityIndex + speedIndex + pollutionIndex + lengthIndex)))) * 100) / 100;
     paths[i].index = index;
@@ -459,14 +459,12 @@ const unblock = (paths, matrix, nodes) => {
     for (let i = 0; i < path.length; i += 1) {
       if (!stop) {
         const lastCell = path[i].cells.length - 2;
-        console.log(path);
 
         if (path[i].cells[lastCell + 1].unit.alive === true) {
           path[i].cells[lastCell + 1].unit.alive = false;
         }
 
         if (path[i].cells[lastCell].unit.alive === true) {
-          debugger;
           const destination = path[i].cells[lastCell].unit.destination;
           const this_cell = path[i].cells[lastCell].id;
           if (this_cell !== destination - 1) {
@@ -493,10 +491,10 @@ const unblock = (paths, matrix, nodes) => {
               prev.set(path[i].B.j, [path[i].B.j]);
               hike(path[i].B.j, dist, matrix, prev);
 
-              console.log("DISTANZE: ");
-              console.log(dist);
-              console.log("PERCORSO: ");
-              console.log(prev);
+              // console.log("DISTANZE: ");
+              // console.log(dist);
+              // console.log("PERCORSO: ");
+              // console.log(prev);
 
               const destination = path[i].cells[path[i].cells.length - 2].unit.destination;
               let ok = false;
@@ -541,8 +539,8 @@ const unblock = (paths, matrix, nodes) => {
   }
   let path_to_return = [];
   for (let c = 0; c < cross.length; c += 1) {
-    for (let p = 0; p < c.length; p += 1) {
-      path_to_return[c[p].ID] = c[p];
+    for (let p = 0; p < cross[c].length; p += 1) {
+      path_to_return[cross[c][p].ID] = cross[c][p];
     }
   }
   return path_to_return;
@@ -578,18 +576,28 @@ const heatmapf = (paths) => {
   return heatmap;
 };
 
+const removePollution = (paths) => {
+
+  return paths;
+}
+
 let gg = 0;
 function routine(paths, virgin, matrix, nodes) {
   const virgin2 = resetf(JSON.parse(JSON.stringify(virgin)));
   const paths2 = upgrade(paths, virgin2);
   const paths3 = random(paths2, database);
   const paths4 = unblock(paths3, matrix, nodes);
-  const [paths5, matrix2] = update(paths3, paths, matrix, nodes);
+  console.log(paths4);
+  const [paths5, matrix2] = update(paths4, paths, matrix, nodes);
   const heatmap = heatmapf(paths5);
   refresh(paths5);
+  let paths6 = paths5;
+  if (tick > historyPollution) {
+    paths6 = removePollution(paths5);
+  }
   tick += 1;
   if (!timeout) {
-    var timeout = setTimeout(gg = () => { routine(paths5, virgin2, matrix2, nodes); }, clock);
+    var timeout = setTimeout(gg = () => { routine(paths6, virgin2, matrix2, nodes); }, clock);
   }
 }
 
