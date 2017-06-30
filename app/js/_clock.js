@@ -426,8 +426,8 @@ function hike(start, dist, matrix, prev) {
     let matrix_length = matrix[start].length;
     for (let column = 0; column < matrix_length; column += 1) {
       if (matrix[start][column]) {
-        if (!dist.has(column) || (dist.has(column) && dist.get(column) > dist.get(start) + matrix[start][column].length)) {
-          dist.set(column, dist.get(start) + matrix[start][column].length);
+        if (!dist.has(column) || (dist.has(column) && dist.get(column) > dist.get(start) + (1 - matrix[start][column].index))) {
+          dist.set(column, dist.get(start) + (1-matrix[start][column].index));
           let array_nodes = JSON.parse(JSON.stringify(prev.get(start)));
           array_nodes.push(column);
           prev.set(column, array_nodes);
