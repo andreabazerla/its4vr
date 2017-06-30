@@ -146,8 +146,8 @@ const database = new Set();
 
 const active = new Map();
 
-active.set(0, 0.70);
-active.set(172, 1);
+active.set(0, 0.7);
+active.set(172, 0.7);
 const dead = [];
 dead.push(171, 61, 163);
 
@@ -466,7 +466,7 @@ const unblock = (paths, matrix, nodes) => {
         }
 
         if (path[i].cells[lastCell].unit.alive === true) {
-          debugger;
+          //debugger;
           const destination = path[i].cells[lastCell].unit.destination;
           const this_cell = path[i].cells[lastCell].id;
           if (this_cell !== destination - 1) {
@@ -529,11 +529,13 @@ const unblock = (paths, matrix, nodes) => {
               }
             }
           }
-          /*for (let k = i; k < path.length; k++){
-            path[k].cells[lastCell + 1].unit.alive = true;
+          
+          for (let k = i+1; k < path.length; k++){
+            debugger;
+            let invisible = path[k].cells.length-1;
+            path[k].cells[invisible].unit.alive = true;
           }
-          break;
-          */
+                  
           stop = true;
         }
       }
@@ -541,8 +543,8 @@ const unblock = (paths, matrix, nodes) => {
   }
   let path_to_return = [];
   for (let c = 0; c < cross.length; c += 1) {
-    for (let p = 0; p < c.length; p += 1) {
-      path_to_return[c[p].ID] = c[p];
+    for (let p = 0; p < cross[c].length; p += 1) {
+      path_to_return[cross[c][p].ID] = cross[c][p];
     }
   }
   return path_to_return;
@@ -584,7 +586,7 @@ function routine(paths, virgin, matrix, nodes) {
   const paths2 = upgrade(paths, virgin2);
   const paths3 = random(paths2, database);
   const paths4 = unblock(paths3, matrix, nodes);
-  const [paths5, matrix2] = update(paths3, paths, matrix, nodes);
+  const [paths5, matrix2] = update(paths4, paths, matrix, nodes);
   const heatmap = heatmapf(paths5);
   refresh(paths5);
   tick += 1;
