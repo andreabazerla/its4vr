@@ -469,7 +469,6 @@ const unblock = (paths, matrix, nodes) => {
         }
 
         if (path[i].cells[lastCell].unit.alive === true) {
-          //debugger;
           const destination = path[i].cells[lastCell].unit.destination;
           const this_cell = path[i].cells[lastCell].id;
           if (this_cell !== destination - 1) {
@@ -496,12 +495,10 @@ const unblock = (paths, matrix, nodes) => {
               prev.set(path[i].B.j, [path[i].B.j]);
               hike(path[i].B.j, dist, matrix, prev);
 
-              // console.log("DISTANZE: ");
-              // console.log(dist);
-              // console.log("PERCORSO: ");
-              // console.log(prev);
-
               const destination = path[i].cells[path[i].cells.length - 2].unit.destination;
+              const age = path[i].cells[path[i].cells.length - 2].unit.age;
+              const idu = path[i].cells[path[i].cells.length - 2].unit.idu;
+              const type = path[i].cells[path[i].cells.length - 2].unit.type;
               let ok = false;
               for (const path2 of paths) {
                 for (const cell of path2.cells) {
@@ -523,6 +520,9 @@ const unblock = (paths, matrix, nodes) => {
                   if (!path3.cells[1].unit.alive) {
                     path3.cells[0].unit.destination = destination;
                     path3.cells[0].unit.alive = true;
+                    path3.cells[0].unit.age = age;
+                    path3.cells[0].unit.idu = idu;
+                    path3.cells[0].unit.type = type;
                   }
                   else {
                     path[i].cells[lastCell + 1].unit.alive = true;
@@ -534,7 +534,6 @@ const unblock = (paths, matrix, nodes) => {
           }
           
           for (let k = i+1; k < path.length; k++){
-            debugger;
             let invisible = path[k].cells.length-1;
             path[k].cells[invisible].unit.alive = true;
           }
