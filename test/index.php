@@ -34,6 +34,12 @@
           cursor: default;
       }
 
+      /*
+      #gui {
+          position: relative;
+      }
+       */
+
       svg {
           width: 100%;
           height: 100%;
@@ -50,12 +56,11 @@
           fill:none;
       }
 
-      /*.highway:hover {
-          stroke-width:5;
-      }*/
-
       .circle {
         fill: black;
+        stroke: black;
+        stroke-width: 2px;
+        vector-effect:non-scaling-stroke;
 		  }
 
       /*.circle:hover {

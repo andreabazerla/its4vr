@@ -1,9 +1,20 @@
 exports.deg2px = function (lat, lon) {
 
+  /*
+  TEST
+   */
   const mapLatTop = 45.38633;
   const mapLatBottom = 45.38401;
   const mapLonLeft = 10.97059;
   const mapLonRight = 10.97398;
+
+  /*
+  VERONA
+   */
+  // const mapLatTop = 45.4322;
+  // const mapLatBottom = 45.3957;
+  // const mapLonLeft = 10.9486;
+  // const mapLonRight = 11.0014;
 
   const mapLonDelta = mapLonRight - mapLonLeft;
 

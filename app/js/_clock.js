@@ -1,136 +1,23 @@
 const Parser = require('./_parser');
-const map = require('../json/test-2.json');
+const map = require('../json/test.json');
 
 let clock = 1000 / 3;
 let background = '#ffffff';
 let highways = '#000000';
 let stroke = 0;
 let cellsAlive = '#ff0000';
-let hideCells = false;
-let showWeights = false;
+let hideCells = true;
+let showWeights = true;
 const clock2 = 3;
 let densityIndex = 1;
 let speedIndex = 1;
 let fluxIndex = 1;
 let pollutionIndex = 1;
 let lengthIndex = 1;
-let typeIndex = 1;
+let typeIndex = 0.5;
 let historyPollution = 100;
 let increasePollution = 10;
 let decreasePollution = 1;
-
-const FizzyText = function (clock2, background, highways, stroke, cellsAlive, hideCells, showWeights, densityIndex, speedIndex, pollutionIndex, lengthIndex, typeIndex, historyPollution, increasePollution, decreasePollution) {
-  this.clock = clock2;
-  this.background = background;
-  this.highways = highways;
-  this.stroke = stroke;
-  this.cellsAlive = cellsAlive;
-  this.hideCells = hideCells;
-  this.showWeights = showWeights;
-  this.densityIndex = densityIndex;
-  this.speedIndex = speedIndex;
-  this.pollutionIndex = pollutionIndex;
-  this.lengthIndex = lengthIndex;
-  this.typeIndex = typeIndex;
-  this.historyPollution = historyPollution;
-  this.increasePollution = increasePollution;
-  this.decreasePollution = decreasePollution;
-};
-
-const text = new FizzyText(clock2, background, highways, stroke, cellsAlive, hideCells, showWeights, densityIndex, speedIndex, pollutionIndex, lengthIndex, typeIndex, historyPollution, increasePollution, decreasePollution);
-const gui = new dat.GUI({
-  load: JSON,
-  preset: 'Default'
-});
-
-const style = gui.addFolder('Style');
-const controls = gui.addFolder('Controls');
-
-style.addColor(text, 'background').onChange((value) => {
-  background = value;
-  document.getElementById('svg').style.background = background;
-});
-
-style.addColor(text, 'highways').onChange((value) => {
-  highways = value;
-  $('.highway').css('stroke', highways);
-});
-
-style.add(text, 'stroke', { Straight: 0, Dotted: 1, Dashed: 5 }).onChange((value) => {
-  stroke = value;
-  $('.highway').css('stroke-dasharray', stroke);
-});
-
-style.addColor(text, 'cellsAlive').onChange((value) => {
-  cellsAlive = value;
-});
-
-style.add(text, 'hideCells').onChange((value) => {
-  hideCells = value;
-});
-
-style.add(text, 'showWeights').onChange((value) => {
-  showWeights = value;
-});
-
-style.open();
-controls.open();
-
-controls.add(text, 'clock').min(1).max(10).step(1)
-  .onChange((value) => {
-    clock = 1000 / value;
-  },
-);
-
-controls.add(text, 'densityIndex').min(0).max(1).step(0.01)
-  .onChange((value) => {
-    densityIndex = value;
-  },
-);
-
-controls.add(text, 'speedIndex').min(0).max(1).step(0.01)
-  .onChange((value) => {
-    speedIndex = value;
-  },
-);
-
-controls.add(text, 'pollutionIndex').min(0).max(1).step(0.01)
-  .onChange((value) => {
-    pollutionIndex = value;
-  },
-);
-
-controls.add(text, 'lengthIndex').min(0).max(1).step(0.01)
-  .onChange((value) => {
-    lengthIndex = value;
-  },
-);
-
-controls.add(text, 'typeIndex').min(0).max(1).step(0.01)
-  .onChange((value) => {
-    typeIndex = value;
-  },
-);
-
-controls.add(text, 'historyPollution').step(1)
-  .onChange((value) => {
-    historyPollution = value;
-  },
-);
-
-controls.add(text, 'increasePollution').step(1)
-  .onChange((value) => {
-    increasePollution = value;
-  },
-);
-
-controls.add(text, 'decreasePollution').step(1)
-  .onChange((value) => {
-    decreasePollution = value;
-  },
-);
-
-gui.remember(text);
 
 const g = Parser.getMap(Parser.getPlacemarks(map, 1), 0);
 const nodes = Parser.getMap(Parser.getPlacemarks(map, 1), 1);
@@ -145,9 +32,9 @@ const pathsP = JSON.parse(JSON.stringify(paths));
 const database = new Set();
 
 const active = new Map();
+active.set(0, 0.5);
+active.set(172, 0.5);
 
-active.set(0, 0.7);
-active.set(172, 0.7);
 const dead = [];
 dead.push(171, 61, 163);
 
@@ -210,7 +97,7 @@ const update = (paths, oldPaths, matrix, nodes) => {
         alive += 1;
         alive2 += increasePollution;
         let alive3 = alive2;
-        if (tick > historyPollution) {
+        if (tick > historyPollution && alive2 > 0) {
           alive3 = alive2 - decreasePollution;
         }
         pollution.set(paths[i].cells[j].id, alive3);
@@ -229,11 +116,10 @@ const update = (paths, oldPaths, matrix, nodes) => {
     paths[i].flux = flux;
     maxPollution = Math.max(totAlive, maxPollution);
     normPollution = 1 - (totAlive / maxPollution);
-    normLength = paths[i].length / maxRealLength;
+    normLength = 1 - (paths[i].length / maxRealLength);
     paths[i].pollution = normPollution;
     const index = Math.round((((density * densityIndex) + (speed * speedIndex) + (normPollution * pollutionIndex) + (normLength * lengthIndex)) / (((densityIndex + speedIndex + pollutionIndex + lengthIndex)))) * 100) / 100;
     paths[i].index = index;
-    // console.log(i + ' ' + Math.round(index * 100) + '%');
     for (const A of nodes) {
       for (const B of nodes) {
         if (paths[i].A.x1 === A.lat && paths[i].A.y1 === A.lon && paths[i].B.x2 === B.lat && paths[i].B.y2 === B.lon) {
@@ -256,6 +142,7 @@ const update = (paths, oldPaths, matrix, nodes) => {
     } else {
       document.getElementById(`path_${i}`).style.strokeWidth = 1;
       document.getElementById(`path_${i}`).style.stroke = highways;
+      document.getElementById(`path_${i}`).style.opacity = 1;
     }
     alive = 0;
     totAlive = 0;
@@ -399,6 +286,13 @@ const refresh = (paths) => {
       } else {
         document.getElementById(`cell_${cell.id}`).style.display = 'block'
         document.getElementById(`cell_${cell.id}`).style.fill = cellsAlive;
+        if (cell.unit.type === 1) {
+          document.getElementById(`cell_${cell.id}`).style.fill = cellsAlive;
+          document.getElementById(`cell_${cell.id}`).style.stroke = cellsAlive;
+        } else {
+          document.getElementById(`cell_${cell.id}`).style.fill = 'none';
+          document.getElementById(`cell_${cell.id}`).style.stroke = cellsAlive;
+        }
       }
     }
   }
@@ -469,7 +363,6 @@ const unblock = (paths, matrix, nodes) => {
         }
 
         if (path[i].cells[lastCell].unit.alive === true) {
-          //debugger;
           const destination = path[i].cells[lastCell].unit.destination;
           const this_cell = path[i].cells[lastCell].id;
           if (this_cell !== destination - 1) {
@@ -501,6 +394,9 @@ const unblock = (paths, matrix, nodes) => {
               // console.log("PERCORSO: ");
               // console.log(prev);
 
+              const idu = path[i].cells[path[i].cells.length - 2].unit.idu;
+              const type = path[i].cells[path[i].cells.length - 2].unit.type;
+              const age = path[i].cells[path[i].cells.length - 2].unit.age;
               const destination = path[i].cells[path[i].cells.length - 2].unit.destination;
               let ok = false;
               for (const path2 of paths) {
@@ -521,6 +417,9 @@ const unblock = (paths, matrix, nodes) => {
               for (const path3 of paths) {
                 if (path3.A.i === start_node && path3.B.j === next_node) {
                   if (!path3.cells[1].unit.alive) {
+                    path3.cells[0].unit.idu = idu;
+                    path3.cells[0].unit.type = type;
+                    path3.cells[0].unit.age = age;
                     path3.cells[0].unit.destination = destination;
                     path3.cells[0].unit.alive = true;
                   }
@@ -532,13 +431,12 @@ const unblock = (paths, matrix, nodes) => {
               }
             }
           }
-          
+
           for (let k = i+1; k < path.length; k++){
-            debugger;
             let invisible = path[k].cells.length-1;
             path[k].cells[invisible].unit.alive = true;
           }
-                  
+
           stop = true;
         }
       }
@@ -583,14 +481,6 @@ const heatmapf = (paths) => {
   return heatmap;
 };
 
-const removePollution = (pollution) => {
-  for (let [key, value] of pollution) {
-    value -= decreasePollution;
-    pollution.set(key, value);
-  }
-  return pollution;
-}
-
 let gg = 0;
 function routine(paths, virgin, matrix, nodes) {
   const virgin2 = resetf(JSON.parse(JSON.stringify(virgin)));
@@ -600,13 +490,6 @@ function routine(paths, virgin, matrix, nodes) {
   const [paths5, matrix2] = update(paths4, paths, matrix, nodes);
   const heatmap = heatmapf(paths5);
   refresh(paths5);
-  let paths6 = paths5;
-  console.log(paths6);
-  console.log(pollution);
-  // if (tick > historyPollution) {
-  //   pollution = removePollution(pollution);
-  //   console.log(pollution);
-  // }
   tick += 1;
   if (!timeout) {
     var timeout = setTimeout(gg = () => { routine(paths5, virgin2, matrix2, nodes); }, clock);
@@ -614,3 +497,122 @@ function routine(paths, virgin, matrix, nodes) {
 }
 
 routine(JSON.parse(JSON.stringify(pathsP)), JSON.parse(JSON.stringify(pathsP)), JSON.parse(JSON.stringify(matrix)), JSON.parse(JSON.stringify(nodes)));
+
+const FizzyText = function (clock2, background, highways, stroke, cellsAlive, hideCells, showWeights, densityIndex, speedIndex, pollutionIndex, lengthIndex, typeIndex, historyPollution, increasePollution, decreasePollution) {
+  // this.pause = function() { clearTimeout(timeout); };
+  this.clock = clock2;
+  this.background = background;
+  this.highways = highways;
+  this.stroke = stroke;
+  this.cellsAlive = cellsAlive;
+  this.hideCells = hideCells;
+  this.showWeights = showWeights;
+  this.densityIndex = densityIndex;
+  this.speedIndex = speedIndex;
+  this.pollutionIndex = pollutionIndex;
+  this.lengthIndex = lengthIndex;
+  this.typeIndex = typeIndex;
+  this.historyPollution = historyPollution;
+  this.increasePollution = increasePollution;
+  this.decreasePollution = decreasePollution;
+};
+
+const text = new FizzyText(clock2, background, highways, stroke, cellsAlive, hideCells, showWeights, densityIndex, speedIndex, pollutionIndex, lengthIndex, typeIndex, historyPollution, increasePollution, decreasePollution);
+const gui = new dat.GUI({
+  load: JSON,
+  preset: 'Default',
+  // autoPlace: false,
+});
+
+// gui.domElement.id = 'gui';
+
+const style = gui.addFolder('Style');
+const controls = gui.addFolder('Controls');
+
+style.addColor(text, 'background').onChange((value) => {
+  background = value;
+  document.getElementById('svg').style.background = background;
+});
+
+style.addColor(text, 'highways').onChange((value) => {
+  highways = value;
+  $('.highway').css('stroke', highways);
+});
+
+style.add(text, 'stroke', { Straight: 0, Dotted: 1, Dashed: 5 }).onChange((value) => {
+  stroke = value;
+  $('.highway').css('stroke-dasharray', stroke);
+});
+
+style.addColor(text, 'cellsAlive').onChange((value) => {
+  cellsAlive = value;
+});
+
+style.add(text, 'hideCells').onChange((value) => {
+  hideCells = value;
+});
+
+style.add(text, 'showWeights').onChange((value) => {
+  showWeights = value;
+});
+
+style.open();
+controls.open();
+
+// controls.add(text, 'pause');
+
+controls.add(text, 'clock').min(1).max(100).step(1)
+  .onChange((value) => {
+    clock = 1000 / value;
+  },
+);
+
+controls.add(text, 'densityIndex').min(0).max(1).step(0.01)
+  .onChange((value) => {
+    densityIndex = value;
+  },
+);
+
+controls.add(text, 'speedIndex').min(0).max(1).step(0.01)
+  .onChange((value) => {
+    speedIndex = value;
+  },
+);
+
+controls.add(text, 'pollutionIndex').min(0).max(1).step(0.01)
+  .onChange((value) => {
+    pollutionIndex = value;
+  },
+);
+
+controls.add(text, 'lengthIndex').min(0).max(1).step(0.01)
+  .onChange((value) => {
+    lengthIndex = value;
+  },
+);
+
+controls.add(text, 'typeIndex').min(0).max(1).step(0.01)
+  .onChange((value) => {
+    typeIndex = value;
+  },
+);
+
+controls.add(text, 'historyPollution').step(1)
+  .onChange((value) => {
+    historyPollution = value;
+  },
+);
+
+controls.add(text, 'increasePollution').step(1)
+  .onChange((value) => {
+    increasePollution = value;
+  },
+);
+
+controls.add(text, 'decreasePollution').step(1)
+  .onChange((value) => {
+    decreasePollution = value;
+  },
+);
+
+gui.remember(text);
