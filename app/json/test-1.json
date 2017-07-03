@@ -6,84 +6,12 @@
 		"Document": [
 			{
 				"name": [
-					"TEST1"
+					"test-1"
 				],
 				"description": [
 					""
 				],
 				"Style": [
-					{
-						"$": {
-							"id": "icon-seq2-0-0-000000-nodesc-normal"
-						},
-						"IconStyle": [
-							{
-								"color": [
-									"ff000000"
-								],
-								"scale": [
-									"1"
-								],
-								"Icon": [
-									{
-										"href": [
-											"images/icon-1.png"
-										]
-									}
-								]
-							}
-						],
-						"LabelStyle": [
-							{
-								"scale": [
-									"0"
-								]
-							}
-						],
-						"BalloonStyle": [
-							{
-								"text": [
-									"<h3>$[name]</h3>"
-								]
-							}
-						]
-					},
-					{
-						"$": {
-							"id": "icon-seq2-0-0-000000-nodesc-highlight"
-						},
-						"IconStyle": [
-							{
-								"color": [
-									"ff000000"
-								],
-								"scale": [
-									"1"
-								],
-								"Icon": [
-									{
-										"href": [
-											"images/icon-1.png"
-										]
-									}
-								]
-							}
-						],
-						"LabelStyle": [
-							{
-								"scale": [
-									"1"
-								]
-							}
-						],
-						"BalloonStyle": [
-							{
-								"text": [
-									"<h3>$[name]</h3>"
-								]
-							}
-						]
-					},
 					{
 						"$": {
 							"id": "line-000000-1200-nodesc-normal"
@@ -132,29 +60,6 @@
 				"StyleMap": [
 					{
 						"$": {
-							"id": "icon-seq2-0-0-000000-nodesc"
-						},
-						"Pair": [
-							{
-								"key": [
-									"normal"
-								],
-								"styleUrl": [
-									"#icon-seq2-0-0-000000-nodesc-normal"
-								]
-							},
-							{
-								"key": [
-									"highlight"
-								],
-								"styleUrl": [
-									"#icon-seq2-0-0-000000-nodesc-highlight"
-								]
-							}
-						]
-					},
-					{
-						"$": {
 							"id": "line-000000-1200-nodesc"
 						},
 						"Pair": [
@@ -180,34 +85,12 @@
 				"Folder": [
 					{
 						"name": [
-							"Lights"
+							"0"
 						],
 						"Placemark": [
 							{
 								"name": [
-									"Point 1"
-								],
-								"styleUrl": [
-									"#icon-seq2-0-0-000000-nodesc"
-								],
-								"Point": [
-									{
-										"coordinates": [
-											"\n            10.9718174,45.3849691,0\n          "
-										]
-									}
-								]
-							}
-						]
-					},
-					{
-						"name": [
-							"Ways"
-						],
-						"Placemark": [
-							{
-								"name": [
-									"Line 1"
+									"0"
 								],
 								"styleUrl": [
 									"#line-000000-1200-nodesc"
@@ -218,14 +101,14 @@
 											"1"
 										],
 										"coordinates": [
-											"\n            10.972783,45.3851876,0\n            10.972504,45.3851857,0\n          "
+											"\n            10.9750092,45.4073163,0\n            10.9756637,45.40732,0\n          "
 										]
 									}
 								]
 							},
 							{
 								"name": [
-									"Line 2"
+									"1"
 								],
 								"styleUrl": [
 									"#line-000000-1200-nodesc"
@@ -236,14 +119,14 @@
 											"1"
 										],
 										"coordinates": [
-											"\n            10.972504,45.3851857,0\n            10.972323,45.3851923,0\n            10.972394,45.3853129,0\n          "
+											"\n            10.9756637,45.40732,0\n            10.9775895,45.4073181,0\n          "
 										]
 									}
 								]
 							},
 							{
 								"name": [
-									"Line 3"
+									"2"
 								],
 								"styleUrl": [
 									"#line-000000-1200-nodesc"
@@ -254,7 +137,61 @@
 											"1"
 										],
 										"coordinates": [
-											"\n            10.972504,45.3851857,0\n            10.972209,45.3851217,0\n            10.9708518,45.3853647,0\n          "
+											"\n            10.9756637,45.40732,0\n            10.9756637,45.408672,0\n          "
+										]
+									}
+								]
+							},
+							{
+								"name": [
+									"3"
+								],
+								"styleUrl": [
+									"#line-000000-1200-nodesc"
+								],
+								"LineString": [
+									{
+										"tessellate": [
+											"1"
+										],
+										"coordinates": [
+											"\n            10.9756637,45.408672,0\n            10.9775976,45.4086814,0\n          "
+										]
+									}
+								]
+							},
+							{
+								"name": [
+									"4"
+								],
+								"styleUrl": [
+									"#line-000000-1200-nodesc"
+								],
+								"LineString": [
+									{
+										"tessellate": [
+											"1"
+										],
+										"coordinates": [
+											"\n            10.9775976,45.4086814,0\n            10.9775895,45.4073181,0\n          "
+										]
+									}
+								]
+							},
+							{
+								"name": [
+									"5"
+								],
+								"styleUrl": [
+									"#line-000000-1200-nodesc"
+								],
+								"LineString": [
+									{
+										"tessellate": [
+											"1"
+										],
+										"coordinates": [
+											"\n            10.9775895,45.4073181,0\n            10.9782386,45.40732,0\n          "
 										]
 									}
 								]

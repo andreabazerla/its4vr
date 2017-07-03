@@ -1,48 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <kml xmlns="http://www.opengis.net/kml/2.2">
   <Document>
-    <name>TEST2</name>
+    <name>test-3</name>
     <description/>
-    <Style id="icon-seq2-0-0-000000-nodesc-normal">
-      <IconStyle>
-        <color>ff000000</color>
-        <scale>1</scale>
-        <Icon>
-          <href>images/icon-1.png</href>
-        </Icon>
-      </IconStyle>
-      <LabelStyle>
-        <scale>0</scale>
-      </LabelStyle>
-      <BalloonStyle>
-        <text><![CDATA[<h3>$[name]</h3>]]></text>
-      </BalloonStyle>
-    </Style>
-    <Style id="icon-seq2-0-0-000000-nodesc-highlight">
-      <IconStyle>
-        <color>ff000000</color>
-        <scale>1</scale>
-        <Icon>
-          <href>images/icon-1.png</href>
-        </Icon>
-      </IconStyle>
-      <LabelStyle>
-        <scale>1</scale>
-      </LabelStyle>
-      <BalloonStyle>
-        <text><![CDATA[<h3>$[name]</h3>]]></text>
-      </BalloonStyle>
-    </Style>
-    <StyleMap id="icon-seq2-0-0-000000-nodesc">
-      <Pair>
-        <key>normal</key>
-        <styleUrl>#icon-seq2-0-0-000000-nodesc-normal</styleUrl>
-      </Pair>
-      <Pair>
-        <key>highlight</key>
-        <styleUrl>#icon-seq2-0-0-000000-nodesc-highlight</styleUrl>
-      </Pair>
-    </StyleMap>
     <Style id="line-000000-1200-nodesc-normal">
       <LineStyle>
         <color>ff000000</color>
@@ -72,60 +32,26 @@
       </Pair>
     </StyleMap>
     <Folder>
-      <name>Lights</name>
+      <name>0</name>
       <Placemark>
-        <name>Point 1</name>
-        <styleUrl>#icon-seq2-0-0-000000-nodesc</styleUrl>
-        <Point>
+        <name>0</name>
+        <styleUrl>#line-000000-1200-nodesc</styleUrl>
+        <LineString>
+          <tessellate>1</tessellate>
           <coordinates>
-            10.9718174,45.3849691,0
+            10.9750092,45.4073163,0
+            10.9756637,45.40732,0
           </coordinates>
-        </Point>
+        </LineString>
       </Placemark>
-    </Folder>
-    <Folder>
-      <name>Ways</name>
       <Placemark>
         <name>1</name>
         <styleUrl>#line-000000-1200-nodesc</styleUrl>
         <LineString>
           <tessellate>1</tessellate>
           <coordinates>
-            10.9716672,45.3841835,0
-            10.971871,45.3845301,0
-          </coordinates>
-        </LineString>
-      </Placemark>
-      <Placemark>
-        <name>5</name>
-        <styleUrl>#line-000000-1200-nodesc</styleUrl>
-        <LineString>
-          <tessellate>1</tessellate>
-          <coordinates>
-            10.971871,45.3845301,0
-            10.9728473,45.3844962,0
-          </coordinates>
-        </LineString>
-      </Placemark>
-      <Placemark>
-        <name>3</name>
-        <styleUrl>#line-000000-1200-nodesc</styleUrl>
-        <LineString>
-          <tessellate>1</tessellate>
-          <coordinates>
-            10.9728473,45.3844962,0
-            10.9730083,45.3851405,0
-          </coordinates>
-        </LineString>
-      </Placemark>
-      <Placemark>
-        <name>4</name>
-        <styleUrl>#line-000000-1200-nodesc</styleUrl>
-        <LineString>
-          <tessellate>1</tessellate>
-          <coordinates>
-            10.9730083,45.3851405,0
-            10.9740168,45.385133,0
+            10.9756637,45.40732,0
+            10.975999,45.4073219,0
           </coordinates>
         </LineString>
       </Placemark>
@@ -135,8 +61,41 @@
         <LineString>
           <tessellate>1</tessellate>
           <coordinates>
-            10.971871,45.3845301,0
-            10.9730083,45.3851405,0
+            10.9756637,45.40732,0
+            10.9756637,45.408672,0
+          </coordinates>
+        </LineString>
+      </Placemark>
+      <Placemark>
+        <name>3</name>
+        <styleUrl>#line-000000-1200-nodesc</styleUrl>
+        <LineString>
+          <tessellate>1</tessellate>
+          <coordinates>
+            10.9756637,45.408672,0
+            10.9775976,45.4086814,0
+          </coordinates>
+        </LineString>
+      </Placemark>
+      <Placemark>
+        <name>4</name>
+        <styleUrl>#line-000000-1200-nodesc</styleUrl>
+        <LineString>
+          <tessellate>1</tessellate>
+          <coordinates>
+            10.9775976,45.4086814,0
+            10.9775895,45.4073181,0
+          </coordinates>
+        </LineString>
+      </Placemark>
+      <Placemark>
+        <name>5</name>
+        <styleUrl>#line-000000-1200-nodesc</styleUrl>
+        <LineString>
+          <tessellate>1</tessellate>
+          <coordinates>
+            10.9775895,45.4073181,0
+            10.9782386,45.40732,0
           </coordinates>
         </LineString>
       </Placemark>
@@ -146,8 +105,8 @@
         <LineString>
           <tessellate>1</tessellate>
           <coordinates>
-            10.971871,45.3845301,0
-            10.972783,45.3860146,0
+            10.975999,45.4073219,0
+            10.9759896,45.4080087,0
           </coordinates>
         </LineString>
       </Placemark>
@@ -157,8 +116,19 @@
         <LineString>
           <tessellate>1</tessellate>
           <coordinates>
-            10.9730083,45.3851405,0
-            10.972783,45.3860146,0
+            10.9759896,45.4080087,0
+            10.9769108,45.4080073,0
+          </coordinates>
+        </LineString>
+      </Placemark>
+      <Placemark>
+        <name>8</name>
+        <styleUrl>#line-000000-1200-nodesc</styleUrl>
+        <LineString>
+          <tessellate>1</tessellate>
+          <coordinates>
+            10.975999,45.4073219,0
+            10.9769249,45.4073247,0
           </coordinates>
         </LineString>
       </Placemark>
@@ -168,8 +138,8 @@
         <LineString>
           <tessellate>1</tessellate>
           <coordinates>
-            10.9728473,45.3844962,0
-            10.9738773,45.3844812,0
+            10.9769108,45.4080073,0
+            10.9769249,45.4073247,0
           </coordinates>
         </LineString>
       </Placemark>
@@ -179,19 +149,8 @@
         <LineString>
           <tessellate>1</tessellate>
           <coordinates>
-            10.972783,45.3860146,0
-            10.9729224,45.3862519,0
-          </coordinates>
-        </LineString>
-      </Placemark>
-      <Placemark>
-        <name>11</name>
-        <styleUrl>#line-000000-1200-nodesc</styleUrl>
-        <LineString>
-          <tessellate>1</tessellate>
-          <coordinates>
-            10.9728098,45.3842815,0
-            10.9728473,45.3844962,0
+            10.9769249,45.4073247,0
+            10.9775895,45.4073181,0
           </coordinates>
         </LineString>
       </Placemark>

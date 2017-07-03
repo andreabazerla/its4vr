@@ -1,5 +1,22 @@
 const Parser = require('./_parser');
-const map = require('../json/test.json');
+
+const href = window.location.href;
+const url = new URL(href);
+const test = url.searchParams.get('test');
+
+let map = null;
+switch (test) {
+  case '1':
+    map = require('../json/test-1.json');
+    break;
+    case '2':
+    map = require('../json/test-2.json');
+    break;
+    case '3':
+    map = require('../json/test-3.json');
+    break;
+  default:
+}
 
 let clock = 1000 / 3;
 let background = '#ffffff';
@@ -19,9 +36,9 @@ let historyPollution = 100;
 let increasePollution = 10;
 let decreasePollution = 1;
 
-const g = Parser.getMap(Parser.getPlacemarks(map, 1), 0);
-const nodes = Parser.getMap(Parser.getPlacemarks(map, 1), 1);
-let ways = Parser.getMap(Parser.getPlacemarks(map, 1), 2);
+const g = Parser.getMap(Parser.getPlacemarks(map, 0), 0);
+const nodes = Parser.getMap(Parser.getPlacemarks(map, 0), 1);
+let ways = Parser.getMap(Parser.getPlacemarks(map, 0), 2);
 const paths = Parser.getMatrix(ways, nodes, g, 2);
 const matrix = Parser.getMatrix(ways, nodes, g, 1);
 ways = Parser.getMatrix(ways, nodes, g, 0);
@@ -31,20 +48,63 @@ const pathsP = JSON.parse(JSON.stringify(paths));
 
 const database = new Set();
 
+/*
+TEST-1
+ */
+
 const active = new Map();
-active.set(0, 0.5);
-active.set(172, 0.5);
-
 const dead = [];
-dead.push(171, 61, 163);
-
 const priority = new Map();
-priority.set(2, 0);
-priority.set(4, 1);
-priority.set(6, 0);
-priority.set(5, 1);
-priority.set(9, 0);
-priority.set(1, 1);
+
+switch (test) {
+  case '1':
+    active.set(0, 0.5);
+
+    dead.push(151);
+
+    priority.set(4, 0);
+    priority.set(1, 1);
+    break;
+  case '2':
+    active.set(0, 1);
+    active.set(171, 1);
+
+    dead.push(136, 170);
+
+    priority.set(4, 0);
+    priority.set(6, 1);
+
+    priority.set(8, 0);
+    priority.set(1, 1);
+    break;
+  case '3':
+    active.set(0, 1);
+
+    dead.push(126);
+
+    priority.set(8, 0);
+    priority.set(9, 1);
+
+    priority.set(4, 0);
+    priority.set(10, 1);
+    break;
+  default:
+}
+
+// const active = new Map();
+// active.set(0, 0.5);
+// active.set(172, 0.5);
+//
+// const dead = [];
+// dead.push(171, 61, 163);
+//
+// const priority = new Map();
+// priority.set(2, 0);
+// priority.set(4, 1);
+// priority.set(6, 0);
+// priority.set(5, 1);
+// priority.set(9, 0);
+// priority.set(1, 1);
 
 for (const [key, value] of priority) {
   pathsP[key].priority = value;
@@ -93,14 +153,16 @@ const update = (paths, oldPaths, matrix, nodes) => {
   for (let i = 0; i < paths.length; i += 1) {
     for (let j = 1; j < paths[i].cells.length - 1; j += 1) {
       let alive2 = pollution.get(paths[i].cells[j].id);
-      if (paths[i].cells[j].unit.alive === true && paths[i].cells[j].unit.type === 1) {
+      if (paths[i].cells[j].unit.alive === true) {
         alive += 1;
-        alive2 += increasePollution;
-        let alive3 = alive2;
-        if (tick > historyPollution && alive2 > 0) {
-          alive3 = alive2 - decreasePollution;
+        if (paths[i].cells[j].unit.type === 1) {
+          alive2 += increasePollution;
+          let alive3 = alive2;
+          if (tick > historyPollution && alive2 > 0) {
+            alive3 = alive2 - decreasePollution;
+          }
+          pollution.set(paths[i].cells[j].id, alive3);
         }
-        pollution.set(paths[i].cells[j].id, alive3);
         paths[i].cells[j].increment = alive2;
       }
       if (oldPaths[i].cells[j].unit.alive === false && paths[i].cells[j].unit.alive === true) {
@@ -556,8 +618,10 @@ style.add(text, 'showWeights').onChange((value) => {
   showWeights = value;
 });
 
-style.open();
-controls.open();
+// style.open();
+// controls.open();
+gui.close();
+// dat.GUI.toggleHide();
 
 // controls.add(text, 'pause');
 

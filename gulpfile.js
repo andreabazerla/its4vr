@@ -34,13 +34,13 @@ gulp.task('script', () => {
 
 gulp.task('watch', () => {
   browserSync.init({
-    proxy: '127.0.0.1/its4vr/test/',
+    proxy: '127.0.0.1/its4vr/',
     injectChanges: true,
     notify: false,
     port: 8080,
   });
 
-  gulp.watch(['./*.html', './test/*.php']).on('change', browserSync.reload);
+  gulp.watch(['./*.html', './*.php']).on('change', browserSync.reload);
   gulp.watch('app/scss/**/*.scss', ['style']);
   gulp.watch('app/js/**/*.js', ['script']);
   gulp.watch('app/php/**/*.php').on('change', browserSync.reload);

@@ -1,12 +1,29 @@
 exports.deg2px = function (lat, lon) {
 
+  const href = window.location.href;
+  const url = new URL(href);
+  const test = url.searchParams.get('test');
+
+  let mapLatTop = 0;
+  let mapLatBottom = 0;
+  let mapLonLeft = 0;
+  let mapLonRight = 0;
+
   /*
-  TEST
+  TEST-1
    */
-  const mapLatTop = 45.38633;
-  const mapLatBottom = 45.38401;
-  const mapLonLeft = 10.97059;
-  const mapLonRight = 10.97398;
+
+  switch (test) {
+    case '1':
+    case '2':
+    case '3':
+      mapLatTop = 45.40967;
+      mapLatBottom = 45.40616;
+      mapLonLeft = 10.97420;
+      mapLonRight = 10.979209;
+      break;
+    default:
+  }
 
   /*
   VERONA
