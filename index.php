@@ -98,6 +98,10 @@
         border-left: 3px solid #ff0000;
       }
 
+      .dg .cr.function {
+        border-left: 3px solid #ff0000;
+      }
+
     </style>
 
     <?php

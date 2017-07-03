@@ -16,6 +16,7 @@ switch (test) {
     map = require('../json/test-3.json');
     break;
   default:
+    map = require('../json/test-1.json');
 }
 
 let clock = 1000 / 3;
@@ -89,31 +90,18 @@ switch (test) {
     priority.set(10, 1);
     break;
   default:
-}
+    active.set(0, 0.5);
 
-// const active = new Map();
-// active.set(0, 0.5);
-// active.set(172, 0.5);
-//
-// const dead = [];
-// dead.push(171, 61, 163);
-//
-// const priority = new Map();
-// priority.set(2, 0);
-// priority.set(4, 1);
-// priority.set(6, 0);
-// priority.set(5, 1);
-// priority.set(9, 0);
-// priority.set(1, 1);
+    dead.push(151);
+
+    priority.set(4, 0);
+    priority.set(1, 1);
+}
 
 for (const [key, value] of priority) {
   pathsP[key].priority = value;
 }
 
-/**
- * @param pollutiown
- * map of cells, any cell identified by id has a number that means how many car pass on it
- */
 let pollution = new Map();
 for (const cell of cells) {
   pollution.set(cell.id, 0);
@@ -131,15 +119,7 @@ const maxRealLength = getMaxLength(pathsP);
 
 let maxPollution = 0;
 let maxLength = 0;
-/**
- *
- * @param {*} paths
- * @param {*} oldPaths
- * @param {*} matrix
- * @param {*} nodes
- *
- * @constant totAlive identified how many cells comes alive in a pat from the beginning
- */
+
 const update = (paths, oldPaths, matrix, nodes) => {
   let alive = 0;
   let changed = 0;
@@ -163,7 +143,7 @@ const update = (paths, oldPaths, matrix, nodes) => {
           }
           pollution.set(paths[i].cells[j].id, alive3);
         }
-        paths[i].cells[j].increment = alive2;
+        paths[i].cells[j].value = alive2;
       }
       if (oldPaths[i].cells[j].unit.alive === false && paths[i].cells[j].unit.alive === true) {
         changed += 1;
@@ -361,25 +341,16 @@ const refresh = (paths) => {
 };
 
 
-const resetf = (paths) => {
+const reset = (paths) => {
   for (const path of paths) {
     for (let i = 0; i < path.cells.length - 1; i += 1) {
       const cell = path.cells[i];
       cell.unit.alive = false;
-      cell.birth = 0;
     }
   }
   return paths;
 };
 
-/**
-* @author Lorenzo Bellani
-* @param {*} start nodo di partenza
-* @param {*} next prossimo nodo scelto
-* @param {*} dist mappa delle distanzr
-* @param {*} matrix matrice associata
-* @param {*} prev mappa dei perscorsi
-*/
 function hike(start, dist, matrix, prev) {
   let next = null;
   if (matrix[start]) {
@@ -393,11 +364,6 @@ function hike(start, dist, matrix, prev) {
           prev.set(column, array_nodes);
         }
         hike(column, dist, matrix, prev);
-        /*
-        if (next === null || dist.get(next) > dist.get(column)) {
-          next = column;
-        }
-        */
       }
     }
   }
@@ -526,16 +492,16 @@ let f = 0;
 let h = 0;
 var tick = 0;
 
-const heatmapf = (paths) => {
+const heatmap = (paths) => {
   const heatmap = [];
   let max = 0;
   for (let i = 0; i < paths.length; i += 1) {
     for (let j = 0; j < paths[i].cells.length; j += 1) {
-      max = Math.max(max, paths[i].cells[j].increment);
+      max = Math.max(max, paths[i].cells[j].value);
       const point = {
         x: paths[i].cells[j].nextX,
         y: paths[i].cells[j].nextY,
-        value: paths[i].cells[j].increment,
+        value: paths[i].cells[j].value,
       };
       heatmap.push(point);
     }
@@ -544,21 +510,21 @@ const heatmapf = (paths) => {
 };
 
 let gg = 0;
-function routine(paths, virgin, matrix, nodes) {
-  const virgin2 = resetf(JSON.parse(JSON.stringify(virgin)));
+function loop(paths, virgin, matrix, nodes) {
+  const virgin2 = reset(JSON.parse(JSON.stringify(virgin)));
   const paths2 = upgrade(paths, virgin2);
   const paths3 = random(paths2, database);
   const paths4 = unblock(paths3, matrix, nodes);
   const [paths5, matrix2] = update(paths4, paths, matrix, nodes);
-  const heatmap = heatmapf(paths5);
+  const heatmap1 = heatmap(paths5);
   refresh(paths5);
   tick += 1;
   if (!timeout) {
-    var timeout = setTimeout(gg = () => { routine(paths5, virgin2, matrix2, nodes); }, clock);
+    var timeout = setTimeout(gg = () => { loop(paths5, virgin2, matrix2, nodes); }, clock);
   }
 }
 
-routine(JSON.parse(JSON.stringify(pathsP)), JSON.parse(JSON.stringify(pathsP)), JSON.parse(JSON.stringify(matrix)), JSON.parse(JSON.stringify(nodes)));
+loop(JSON.parse(JSON.stringify(pathsP)), JSON.parse(JSON.stringify(pathsP)), JSON.parse(JSON.stringify(matrix)), JSON.parse(JSON.stringify(nodes)));
 
 const FizzyText = function (clock2, background, highways, stroke, cellsAlive, hideCells, showWeights, densityIndex, speedIndex, pollutionIndex, lengthIndex, typeIndex, historyPollution, increasePollution, decreasePollution) {
   // this.pause = function() { clearTimeout(timeout); };
@@ -577,6 +543,10 @@ const FizzyText = function (clock2, background, highways, stroke, cellsAlive, hi
   this.historyPollution = historyPollution;
   this.increasePollution = increasePollution;
   this.decreasePollution = decreasePollution;
+  const pathURL = location.protocol + '//' + location.host + location.pathname;
+  this.test1 = function() { window.location = pathURL + '?test=1'; };
+  this.test2 = function() { window.location = pathURL + '?test=2'; };
+  this.test3 = function() { window.location = pathURL + '?test=3'; };
 };
 
 const text = new FizzyText(clock2, background, highways, stroke, cellsAlive, hideCells, showWeights, densityIndex, speedIndex, pollutionIndex, lengthIndex, typeIndex, historyPollution, increasePollution, decreasePollution);
@@ -588,37 +558,38 @@ const gui = new dat.GUI({
 
 // gui.domElement.id = 'gui';
 
-const style = gui.addFolder('Style');
+const styles = gui.addFolder('Styles');
 const controls = gui.addFolder('Controls');
+const tests = gui.addFolder('Tests');
 
-style.addColor(text, 'background').onChange((value) => {
+styles.addColor(text, 'background').onChange((value) => {
   background = value;
   document.getElementById('svg').style.background = background;
 });
 
-style.addColor(text, 'highways').onChange((value) => {
+styles.addColor(text, 'highways').onChange((value) => {
   highways = value;
   $('.highway').css('stroke', highways);
 });
 
-style.add(text, 'stroke', { Straight: 0, Dotted: 1, Dashed: 5 }).onChange((value) => {
+styles.add(text, 'stroke', { Straight: 0, Dotted: 1, Dashed: 5 }).onChange((value) => {
   stroke = value;
   $('.highway').css('stroke-dasharray', stroke);
 });
 
-style.addColor(text, 'cellsAlive').onChange((value) => {
+styles.addColor(text, 'cellsAlive').onChange((value) => {
   cellsAlive = value;
 });
 
-style.add(text, 'hideCells').onChange((value) => {
+styles.add(text, 'hideCells').onChange((value) => {
   hideCells = value;
 });
 
-style.add(text, 'showWeights').onChange((value) => {
+styles.add(text, 'showWeights').onChange((value) => {
   showWeights = value;
 });
 
-// style.open();
+// styles.open();
 // controls.open();
 gui.close();
 // dat.GUI.toggleHide();
@@ -678,5 +649,9 @@ controls.add(text, 'decreasePollution').step(1)
     decreasePollution = value;
   },
 );
+
+tests.add(text, 'test1');
+tests.add(text, 'test2');
+tests.add(text, 'test3');
 
 gui.remember(text);

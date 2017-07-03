@@ -91,8 +91,8 @@ module.exports = {
       return ways;
     }
   },
-  cells(d, u) {
-    return d % u < u / 2 ? Math.floor(d / u) : Math.ceil(d / u);
+  cells(l, d) {
+    return l % d < d / 2 ? Math.floor(l / d) : Math.ceil(l / d);
   },
   ratio(n1, n2, me) {
     let ii = [];
@@ -120,7 +120,6 @@ module.exports = {
     const paths = [];
     const matrix = [];
     while (matrix.push([]) < points.length);
-    // while (matrix.push([]) < 100);
 
     let i = 0;
     let j = 0;
@@ -144,9 +143,7 @@ module.exports = {
 
               let nextX = 0;
               let nextY = 0;
-              const birth = 0;
-              const death = 0;
-              const increment = 0;
+              const value = 0;
 
               const idu = 0;
               let alive = false;
@@ -158,9 +155,7 @@ module.exports = {
                 id,
                 nextX,
                 nextY,
-                birth,
-                death,
-                increment,
+                value,
                 unit: {
                   idu,
                   alive,
@@ -192,9 +187,7 @@ module.exports = {
                   id,
                   nextX,
                   nextY,
-                  birth,
-                  death,
-                  increment,
+                  value,
                   unit: {
                     idu,
                     alive,
@@ -215,9 +208,7 @@ module.exports = {
                 id,
                 nextX,
                 nextY,
-                birth,
-                death,
-                increment,
+                value,
                 unit: {
                   idu,
                   alive,
@@ -305,9 +296,7 @@ module.exports = {
 
       let nextX = 0;
       let nextY = 0;
-      const birth = 0;
-      const death = 0;
-      const increment = 0;
+      const value = 0;
 
       const idu = 0;
       const alive = false;
@@ -319,9 +308,7 @@ module.exports = {
         id,
         nextX,
         nextY,
-        birth,
-        death,
-        increment,
+        value,
         unit: {
           idu,
           alive,
@@ -353,9 +340,7 @@ module.exports = {
           id,
           nextX,
           nextY,
-          birth,
-          death,
-          increment,
+          value,
           unit: {
             idu,
             alive,
@@ -392,9 +377,7 @@ module.exports = {
         id,
         nextX,
         nextY,
-        birth,
-        death,
-        increment,
+        value,
         unit: {
           idu,
           alive,

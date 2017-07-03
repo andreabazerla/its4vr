@@ -23,6 +23,10 @@ exports.deg2px = function (lat, lon) {
       mapLonRight = 10.979209;
       break;
     default:
+      mapLatTop = 45.40967;
+      mapLatBottom = 45.40616;
+      mapLonLeft = 10.97420;
+      mapLonRight = 10.979209;
   }
 
   /*
