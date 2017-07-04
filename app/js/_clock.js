@@ -6,6 +6,9 @@ const test = url.searchParams.get('test');
 
 let map = null;
 switch (test) {
+  case '0':
+    map = require('../json/test-0.json');
+    break;
   case '1':
     map = require('../json/test-1.json');
     break;
@@ -16,7 +19,7 @@ switch (test) {
     map = require('../json/test-3.json');
     break;
   default:
-    map = require('../json/test-1.json');
+    map = require('../json/test-0.json');
 }
 
 let clock = 1000 / 3;
@@ -58,6 +61,11 @@ const dead = [];
 const priority = new Map();
 
 switch (test) {
+  case '0':
+    active.set(0, 0.5);
+
+    dead.push(51);
+    break;
   case '1':
     active.set(0, 0.5);
 
@@ -92,10 +100,7 @@ switch (test) {
   default:
     active.set(0, 0.5);
 
-    dead.push(151);
-
-    priority.set(4, 0);
-    priority.set(1, 1);
+    dead.push(51);
 }
 
 for (const [key, value] of priority) {
@@ -517,6 +522,7 @@ function loop(paths, virgin, matrix, nodes) {
   const paths4 = unblock(paths3, matrix, nodes);
   const [paths5, matrix2] = update(paths4, paths, matrix, nodes);
   const heatmap1 = heatmap(paths5);
+  // paths5[].cells
   refresh(paths5);
   tick += 1;
   if (!timeout) {
@@ -544,6 +550,7 @@ const FizzyText = function (clock2, background, highways, stroke, cellsAlive, hi
   this.increasePollution = increasePollution;
   this.decreasePollution = decreasePollution;
   const pathURL = location.protocol + '//' + location.host + location.pathname;
+  this.test0 = function() { window.location = pathURL + '?test=0'; };
   this.test1 = function() { window.location = pathURL + '?test=1'; };
   this.test2 = function() { window.location = pathURL + '?test=2'; };
   this.test3 = function() { window.location = pathURL + '?test=3'; };
@@ -650,6 +657,7 @@ controls.add(text, 'decreasePollution').step(1)
   },
 );
 
+tests.add(text, 'test0');
 tests.add(text, 'test1');
 tests.add(text, 'test2');
 tests.add(text, 'test3');
