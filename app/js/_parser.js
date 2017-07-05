@@ -230,8 +230,9 @@ module.exports = {
               const flux = 0;
               const pollution = 0;
               const index = 0;
-              const stupid_index = 0;
-              const smart_index = 0;
+              const basic = 0;
+              const premium = 0;
+              const disabled = false;
 
               paths.push({
                 ID,
@@ -246,13 +247,16 @@ module.exports = {
                   y2,
                 },
                 cells,
-                priority,
                 length,
+                priority,
+                index,
+                basic,
+                premium,
                 density,
                 speed,
                 flux,
                 pollution,
-                index,
+                disabled,
               });
 
               if (l === 0 || l === (way.points).length - 1) {

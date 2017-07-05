@@ -10,7 +10,6 @@ switch (test) {
     map = require('../json/test-0.json');
     break;
   case '1':
-  case '4':
     map = require('../json/test-1.json');
     break;
   case '2':
@@ -19,7 +18,10 @@ switch (test) {
   case '3':
     map = require('../json/test-3.json');
     break;
-    case '5':
+  case '4':
+    map = require('../json/test-4.json');
+    break;
+  case '5':
     map = require('../json/test-5.json');
     break;
   default:
@@ -75,8 +77,8 @@ switch (test) {
     priority.set(1, 1);
     break;
   case '2':
-    active.set(0, 1);
-    active.set(171, 1);
+    active.set(0, 0.9);
+    active.set(171, 0.9);
 
     dead.push(136);
 
@@ -173,7 +175,6 @@ const update = (paths, oldPaths, matrix, nodes) => {
       totAlive += alive2;
     }
     speed = changed / (paths[i].cells.length - 2);
-    // speed = (paths[i].cells.length - 2 - changed) / (paths[i].cells.length - 2);
     density = 1 - (alive / (paths[i].cells.length - 2));
     flux = density * speed;
     paths[i].density = density;
@@ -184,8 +185,8 @@ const update = (paths, oldPaths, matrix, nodes) => {
     normLength = 1 - (paths[i].length / maxRealLength);
     paths[i].pollution = normPollution;
     const index = Math.round((((density * densityIndex) + (speed * speedIndex) + (normPollution * pollutionIndex) + (normLength * lengthIndex)) / (((densityIndex + speedIndex + pollutionIndex + lengthIndex)))) * 100) / 100;
-    const stupid_index = Math.round((((normPollution * pollutionIndex) + (normLength * lengthIndex)) / (((pollutionIndex + lengthIndex)))) * 100) / 100;
-    const smart_index = Math.round((((density * densityIndex) + (speed * speedIndex) + (normLength * lengthIndex)) / (((densityIndex + speedIndex + lengthIndex)))) * 100) / 100;
+    const basic = Math.round((((normPollution * pollutionIndex) + (normLength * lengthIndex)) / (((pollutionIndex + lengthIndex)))) * 100) / 100;
+    const premium = Math.round((((density * densityIndex) + (speed * speedIndex) + (normLength * lengthIndex)) / (((densityIndex + speedIndex + lengthIndex)))) * 100) / 100;
     for (const A of nodes) {
       for (const B of nodes) {
         if (paths[i].A.x1 === A.lat && paths[i].A.y1 === A.lon && paths[i].B.x2 === B.lat && paths[i].B.y2 === B.lon) {
@@ -194,8 +195,8 @@ const update = (paths, oldPaths, matrix, nodes) => {
           matrix[paths[i].A.i][paths[i].B.j].flux = flux;
           matrix[paths[i].A.i][paths[i].B.j].pollution = normPollution;
           matrix[paths[i].A.i][paths[i].B.j].index = index;
-          matrix[paths[i].A.i][paths[i].B.j].stupid_index = stupid_index;
-          matrix[paths[i].A.i][paths[i].B.j].smart_index = smart_index
+          matrix[paths[i].A.i][paths[i].B.j].basic = basic;
+          matrix[paths[i].A.i][paths[i].B.j].premium = premium
         }
       }
     }
@@ -242,6 +243,7 @@ const upgrade = (paths, virgin) => {
               ((virgin[path.ID].cells)[h]).unit.destination = ((path.cells)[h]).unit.destination;
               ((virgin[path.ID].cells)[h]).unit.type = ((path.cells)[h]).unit.type;
               ((virgin[path.ID].cells)[h]).unit.blocked = ((path.cells)[h]).unit.blocked;
+              virgin[path.ID].disabled = true;
             } else {
               // 110
               ((virgin[path.ID].cells)[h]).unit.alive = false;
@@ -253,6 +255,7 @@ const upgrade = (paths, virgin) => {
               ((virgin[path.ID].cells)[h]).unit.type = null;
               ((virgin[path.ID].cells)[p2]).unit.blocked = ((path.cells)[h]).unit.blocked;
               ((virgin[path.ID].cells)[h]).unit.blocked = false;
+              virgin[path.ID].disabled = false;
             }
           } else {
             // 111
@@ -266,15 +269,25 @@ const upgrade = (paths, virgin) => {
           // 10_
           if (((path.cells)[p2]).unit.alive === true) {
             // 101
-            ((virgin[path.ID].cells)[h]).unit.alive = true;
-            ((virgin[path.ID].cells)[h]).unit.idu = ((path.cells)[p0]).unit.idu;
-            ((virgin[path.ID].cells)[p0]).unit.idu = 0;
-            ((virgin[path.ID].cells)[h]).unit.destination = ((path.cells)[p0]).unit.destination;
-            ((virgin[path.ID].cells)[p0]).unit.destination = null;
-            ((virgin[path.ID].cells)[h]).unit.type = ((path.cells)[p0]).unit.type;
-            ((virgin[path.ID].cells)[p0]).unit.type = null;
-            ((virgin[path.ID].cells)[h]).unit.blocked = ((path.cells)[h]).unit.blocked;
-            ((virgin[path.ID].cells)[h]).unit.blocked = false;
+            if (((path.cells)[p0]).unit.blocked === true) {
+              ((virgin[path.ID].cells)[p0]).unit.alive = ((path.cells)[p0]).unit.alive;
+              ((virgin[path.ID].cells)[p0]).unit.idu = ((path.cells)[p0]).unit.idu;
+              ((virgin[path.ID].cells)[p0]).unit.destination = ((path.cells)[p0]).unit.destination;
+              ((virgin[path.ID].cells)[p0]).unit.type = ((path.cells)[p0]).unit.type;
+              ((virgin[path.ID].cells)[p0]).unit.blocked = ((path.cells)[p0]).unit.blocked;
+              virgin[path.ID].disabled = true;
+            } else {
+              ((virgin[path.ID].cells)[h]).unit.alive = true;
+              ((virgin[path.ID].cells)[h]).unit.idu = ((path.cells)[p0]).unit.idu;
+              ((virgin[path.ID].cells)[p0]).unit.idu = 0;
+              ((virgin[path.ID].cells)[h]).unit.destination = ((path.cells)[p0]).unit.destination;
+              ((virgin[path.ID].cells)[p0]).unit.destination = null;
+              ((virgin[path.ID].cells)[h]).unit.type = ((path.cells)[p0]).unit.type;
+              ((virgin[path.ID].cells)[p0]).unit.type = null;
+              ((virgin[path.ID].cells)[h]).unit.blocked = ((path.cells)[h]).unit.blocked;
+              ((virgin[path.ID].cells)[h]).unit.blocked = false;
+              virgin[path.ID].disabled = false;
+            }
           } else {
             // 100
             if (((path.cells)[p0]).unit.blocked === true) {
@@ -284,6 +297,7 @@ const upgrade = (paths, virgin) => {
               ((virgin[path.ID].cells)[p0]).unit.destination = ((path.cells)[p0]).unit.destination;
               ((virgin[path.ID].cells)[p0]).unit.type = ((path.cells)[p0]).unit.type;
               ((virgin[path.ID].cells)[p0]).unit.blocked = ((path.cells)[p0]).unit.blocked;
+              virgin[path.ID].disabled = true;
             } else {
               // 100
               ((virgin[path.ID].cells)[h]).unit.alive = true;
@@ -295,6 +309,7 @@ const upgrade = (paths, virgin) => {
               ((virgin[path.ID].cells)[p0]).unit.type = null;
               ((virgin[path.ID].cells)[h]).unit.blocked = ((path.cells)[p0]).unit.blocked;
               ((virgin[path.ID].cells)[p0]).unit.blocked = false;
+              virgin[path.ID].disabled = false;
             }
           }
         }
@@ -311,6 +326,7 @@ const upgrade = (paths, virgin) => {
               ((virgin[path.ID].cells)[h]).unit.destination = ((path.cells)[h]).unit.destination;
               ((virgin[path.ID].cells)[h]).unit.type = ((path.cells)[h]).unit.type;
               ((virgin[path.ID].cells)[h]).unit.blocked = ((path.cells)[h]).unit.blocked;
+              virgin[path.ID].disabled = true;
             } else {
               // 010
               ((virgin[path.ID].cells)[h]).unit.alive = false;
@@ -322,9 +338,10 @@ const upgrade = (paths, virgin) => {
               ((virgin[path.ID].cells)[h]).unit.type = null;
               ((virgin[path.ID].cells)[p2]).unit.blocked = ((path.cells)[h]).unit.blocked;
               ((virgin[path.ID].cells)[h]).unit.blocked = false;
+              virgin[path.ID].disabled = false;
             }
           } else {
-            // 001
+            // 011
             ((virgin[path.ID].cells)[h]).unit.alive = ((path.cells)[h]).unit.alive;
             ((virgin[path.ID].cells)[h]).unit.idu = ((path.cells)[h]).unit.idu;
             ((virgin[path.ID].cells)[h]).unit.destination = ((path.cells)[h]).unit.destination;
@@ -438,16 +455,16 @@ function hike(start, dist, matrix, prev, type) {
     for (let column = 0; column < matrix_length; column += 1) {
       if (matrix[start][column]) {
         if (type === 1) {
-          if (!dist.has(column) || (dist.has(column) && dist.get(column) > dist.get(start) + (1 - matrix[start][column].stupid_index))) {
-            dist.set(column, dist.get(start) + (1 - matrix[start][column].stupid_index));
+          if (!dist.has(column) || (dist.has(column) && dist.get(column) > dist.get(start) + (1 - matrix[start][column].basic))) {
+            dist.set(column, dist.get(start) + (1 - matrix[start][column].basic));
             let array_nodes = JSON.parse(JSON.stringify(prev.get(start)));
             array_nodes.push(column);
             prev.set(column, array_nodes);
           }
         }
         else {
-          if (!dist.has(column) || (dist.has(column) && dist.get(column) > dist.get(start) + (1 - matrix[start][column].smart_index))) {
-            dist.set(column, dist.get(start) + (1 - matrix[start][column].smart_index));
+          if (!dist.has(column) || (dist.has(column) && dist.get(column) > dist.get(start) + (1 - matrix[start][column].premium))) {
+            dist.set(column, dist.get(start) + (1 - matrix[start][column].premium));
             let array_nodes = JSON.parse(JSON.stringify(prev.get(start)));
             array_nodes.push(column);
             prev.set(column, array_nodes);
