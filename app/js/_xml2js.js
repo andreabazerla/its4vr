@@ -11,17 +11,17 @@ var parser = new xml2js.Parser();
 //
 // switch (test) {
 //   case '1':
-//     path = './app/xml/zai.xml';
+//     path = './app/xml/test-0.xml';
 //     break;
 //   default:
 //
 // }
 
-fs.readFile('./app/xml/zai.xml', function (err, data) {
+fs.readFile('./app/xml/test-5.xml', function (err, data) {
 
   parser.parseString(data, function (err, result) {
 
-    fs.writeFile('app/json/zai.json', JSON.stringify(result, null, '\t'), (err) => {
+    fs.writeFile('app/json/test-5.json', JSON.stringify(result, null, '\t'), (err) => {
       if (err) throw err;
     });
   });
