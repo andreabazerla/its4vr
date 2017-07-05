@@ -150,6 +150,7 @@ module.exports = {
               const destination = null;
               const type = null;
               const age = 0;
+              const blocked = false;
 
               cells.push({
                 id,
@@ -162,6 +163,7 @@ module.exports = {
                   destination,
                   type,
                   age,
+                  blocked,
                 },
               });
 
@@ -194,6 +196,7 @@ module.exports = {
                     destination,
                     type,
                     age,
+                    blocked,
                   },
                 });
 
@@ -215,6 +218,7 @@ module.exports = {
                   destination,
                   type,
                   age,
+                  blocked,
                 },
               });
 
@@ -303,6 +307,7 @@ module.exports = {
       const destination = null;
       const type = null;
       const age = 0;
+      const blocked = false;
 
       cells.push({
         id,
@@ -315,6 +320,7 @@ module.exports = {
           destination,
           type,
           age,
+          blocked,
         },
       });
 
@@ -347,6 +353,7 @@ module.exports = {
             destination,
             type,
             age,
+            blocked,
           },
         });
 
@@ -384,6 +391,7 @@ module.exports = {
           destination,
           type,
           age,
+          blocked,
         },
       });
 

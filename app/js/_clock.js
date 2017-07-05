@@ -10,6 +10,7 @@ switch (test) {
     map = require('../json/test-0.json');
     break;
   case '1':
+  case '4':
     map = require('../json/test-1.json');
     break;
     case '2':
@@ -19,7 +20,7 @@ switch (test) {
     map = require('../json/test-3.json');
     break;
   default:
-    map = require('../json/test-0.json');
+    map = require('../json/zai.json');
 }
 
 let clock = 1000 / 3;
@@ -52,17 +53,13 @@ const pathsP = JSON.parse(JSON.stringify(paths));
 
 const database = new Set();
 
-/*
-TEST-1
- */
-
 const active = new Map();
 const dead = [];
 const priority = new Map();
 
 switch (test) {
   case '0':
-    active.set(0, 0.5);
+    active.set(0, 0.25);
 
     dead.push(51);
     break;
@@ -87,7 +84,7 @@ switch (test) {
     priority.set(1, 1);
     break;
   case '3':
-    active.set(0, 1);
+    active.set(0, 0.75);
 
     dead.push(126);
 
@@ -97,10 +94,52 @@ switch (test) {
     priority.set(4, 0);
     priority.set(10, 1);
     break;
-  default:
+  case '4':
     active.set(0, 0.5);
 
-    dead.push(51);
+    dead.push(151);
+
+    priority.set(4, 0);
+    priority.set(1, 1);
+    break;
+  default:
+    active.set(0, 0.1);
+    active.set(2181, 0.1);
+    // active.set(3383, 0.1);
+    active.set(3718, 0.1);
+
+    dead.push(718, 3382, 3715);
+
+    priority.set(7, 0);
+    priority.set(2, 1);
+
+    priority.set(0, 0);
+    priority.set(41, 1);
+    priority.set(18, 2);
+
+    priority.set(25, 0);
+    priority.set(24, 1);
+
+    priority.set(26, 0);
+    priority.set(16, 1);
+
+    priority.set(29, 0);
+    priority.set(27, 1);
+
+    priority.set(33, 0);
+    priority.set(32, 1);
+
+    priority.set(38, 0);
+    priority.set(37, 1);
+
+    priority.set(19, 0);
+    priority.set(39, 1);
+
+    priority.set(12, 0);
+    priority.set(42, 1);
+
+    priority.set(45, 0);
+    priority.set(14, 1);
 }
 
 for (const [key, value] of priority) {
@@ -156,6 +195,7 @@ const update = (paths, oldPaths, matrix, nodes) => {
       totAlive += alive2;
     }
     speed = changed / (paths[i].cells.length - 2);
+    // speed = (paths[i].cells.length - 2 - changed) / (paths[i].cells.length - 2);
     density = 1 - (alive / (paths[i].cells.length - 2));
     flux = density * speed;
     paths[i].density = density;
@@ -209,23 +249,42 @@ const upgrade = (paths, virgin) => {
       const p2 = i + 2;
       const h = p1;
       if (((path.cells)[p0]).unit.alive === true) {
+        // 1__
         if (((path.cells)[p1]).unit.alive === true) {
+          // 11_
           if (((path.cells)[p2]).unit.alive === false) {
-            ((virgin[path.ID].cells)[h]).unit.alive = false;
-            ((virgin[path.ID].cells)[p2]).unit.idu = ((path.cells)[h]).unit.idu;
-            ((virgin[path.ID].cells)[h]).unit.idu = 0;
-            ((virgin[path.ID].cells)[p2]).unit.destination = ((path.cells)[h]).unit.destination;
-            ((virgin[path.ID].cells)[h]).unit.destination = null;
-            ((virgin[path.ID].cells)[p2]).unit.type = ((path.cells)[h]).unit.type;
-            ((virgin[path.ID].cells)[h]).unit.type = null;
+            // 110
+            if (((path.cells)[p1]).unit.blocked === true) {
+              // 1X0
+              ((virgin[path.ID].cells)[h]).unit.alive = ((path.cells)[h]).unit.alive;
+              ((virgin[path.ID].cells)[h]).unit.idu = ((path.cells)[h]).unit.idu;
+              ((virgin[path.ID].cells)[h]).unit.destination = ((path.cells)[h]).unit.destination;
+              ((virgin[path.ID].cells)[h]).unit.type = ((path.cells)[h]).unit.type;
+              ((virgin[path.ID].cells)[h]).unit.blocked = ((path.cells)[h]).unit.blocked;
+            } else {
+              // 110
+              ((virgin[path.ID].cells)[h]).unit.alive = false;
+              ((virgin[path.ID].cells)[p2]).unit.idu = ((path.cells)[h]).unit.idu;
+              ((virgin[path.ID].cells)[h]).unit.idu = 0;
+              ((virgin[path.ID].cells)[p2]).unit.destination = ((path.cells)[h]).unit.destination;
+              ((virgin[path.ID].cells)[h]).unit.destination = null;
+              ((virgin[path.ID].cells)[p2]).unit.type = ((path.cells)[h]).unit.type;
+              ((virgin[path.ID].cells)[h]).unit.type = null;
+              ((virgin[path.ID].cells)[p2]).unit.blocked = ((path.cells)[h]).unit.blocked;
+              ((virgin[path.ID].cells)[h]).unit.blocked = false;
+            }
           } else {
+            // 111
             ((virgin[path.ID].cells)[h]).unit.alive = ((path.cells)[h]).unit.alive;
             ((virgin[path.ID].cells)[h]).unit.idu = ((path.cells)[h]).unit.idu;
             ((virgin[path.ID].cells)[h]).unit.destination = ((path.cells)[h]).unit.destination;
             ((virgin[path.ID].cells)[h]).unit.type = ((path.cells)[h]).unit.type;
+            ((virgin[path.ID].cells)[h]).unit.blocked = ((path.cells)[h]).unit.blocked;
           }
         } else {
+          // 10_
           if (((path.cells)[p2]).unit.alive === true) {
+            // 101
             ((virgin[path.ID].cells)[h]).unit.alive = true;
             ((virgin[path.ID].cells)[h]).unit.idu = ((path.cells)[p0]).unit.idu;
             ((virgin[path.ID].cells)[p0]).unit.idu = 0;
@@ -233,37 +292,71 @@ const upgrade = (paths, virgin) => {
             ((virgin[path.ID].cells)[p0]).unit.destination = null;
             ((virgin[path.ID].cells)[h]).unit.type = ((path.cells)[p0]).unit.type;
             ((virgin[path.ID].cells)[p0]).unit.type = null;
+            ((virgin[path.ID].cells)[h]).unit.blocked = ((path.cells)[h]).unit.blocked;
+            ((virgin[path.ID].cells)[h]).unit.blocked = false;
           } else {
-            ((virgin[path.ID].cells)[h]).unit.alive = true;
-            ((virgin[path.ID].cells)[h]).unit.idu = ((path.cells)[p0]).unit.idu;
-            ((virgin[path.ID].cells)[p0]).unit.idu = 0;
-            ((virgin[path.ID].cells)[h]).unit.destination = ((path.cells)[p0]).unit.destination;
-            ((virgin[path.ID].cells)[p0]).unit.destination = null;
-            ((virgin[path.ID].cells)[h]).unit.type = ((path.cells)[p0]).unit.type;
-            ((virgin[path.ID].cells)[p0]).unit.type = null;
+            // 100
+            if (((path.cells)[p0]).unit.blocked === true) {
+              // X00
+              ((virgin[path.ID].cells)[p0]).unit.alive = ((path.cells)[p0]).unit.alive;
+              ((virgin[path.ID].cells)[p0]).unit.idu = ((path.cells)[p0]).unit.idu;
+              ((virgin[path.ID].cells)[p0]).unit.destination = ((path.cells)[p0]).unit.destination;
+              ((virgin[path.ID].cells)[p0]).unit.type = ((path.cells)[p0]).unit.type;
+              ((virgin[path.ID].cells)[p0]).unit.blocked = ((path.cells)[p0]).unit.blocked;
+            } else {
+              // 100
+              ((virgin[path.ID].cells)[h]).unit.alive = true;
+              ((virgin[path.ID].cells)[h]).unit.idu = ((path.cells)[p0]).unit.idu;
+              ((virgin[path.ID].cells)[p0]).unit.idu = 0;
+              ((virgin[path.ID].cells)[h]).unit.destination = ((path.cells)[p0]).unit.destination;
+              ((virgin[path.ID].cells)[p0]).unit.destination = null;
+              ((virgin[path.ID].cells)[h]).unit.type = ((path.cells)[p0]).unit.type;
+              ((virgin[path.ID].cells)[p0]).unit.type = null;
+              ((virgin[path.ID].cells)[h]).unit.blocked = ((path.cells)[p0]).unit.blocked;
+              ((virgin[path.ID].cells)[p0]).unit.blocked = false;
+            }
           }
         }
       } else {
+        // 0__
         if (((path.cells)[p1]).unit.alive === true) {
+          // 01_
           if (((path.cells)[p2]).unit.alive === false) {
-            ((virgin[path.ID].cells)[h]).unit.alive = false;
-            ((virgin[path.ID].cells)[p2]).unit.idu = ((path.cells)[h]).unit.idu;
-            ((virgin[path.ID].cells)[h]).unit.idu = 0;
-            ((virgin[path.ID].cells)[p2]).unit.destination = ((path.cells)[h]).unit.destination;
-            ((virgin[path.ID].cells)[h]).unit.destination = null;
-            ((virgin[path.ID].cells)[p2]).unit.type = ((path.cells)[h]).unit.type;
-            ((virgin[path.ID].cells)[h]).unit.type = null;
+            // 010
+            if (((path.cells)[p1]).unit.blocked === true) {
+              // 0X0
+              ((virgin[path.ID].cells)[h]).unit.alive = ((path.cells)[h]).unit.alive;
+              ((virgin[path.ID].cells)[h]).unit.idu = ((path.cells)[h]).unit.idu;
+              ((virgin[path.ID].cells)[h]).unit.destination = ((path.cells)[h]).unit.destination;
+              ((virgin[path.ID].cells)[h]).unit.type = ((path.cells)[h]).unit.type;
+              ((virgin[path.ID].cells)[h]).unit.blocked = ((path.cells)[h]).unit.blocked;
+            } else {
+              // 010
+              ((virgin[path.ID].cells)[h]).unit.alive = false;
+              ((virgin[path.ID].cells)[p2]).unit.idu = ((path.cells)[h]).unit.idu;
+              ((virgin[path.ID].cells)[h]).unit.idu = 0;
+              ((virgin[path.ID].cells)[p2]).unit.destination = ((path.cells)[h]).unit.destination;
+              ((virgin[path.ID].cells)[h]).unit.destination = null;
+              ((virgin[path.ID].cells)[p2]).unit.type = ((path.cells)[h]).unit.type;
+              ((virgin[path.ID].cells)[h]).unit.type = null;
+              ((virgin[path.ID].cells)[p2]).unit.blocked = ((path.cells)[h]).unit.blocked;
+              ((virgin[path.ID].cells)[h]).unit.blocked = false;
+            }
           } else {
+            // 001
             ((virgin[path.ID].cells)[h]).unit.alive = ((path.cells)[h]).unit.alive;
             ((virgin[path.ID].cells)[h]).unit.idu = ((path.cells)[h]).unit.idu;
             ((virgin[path.ID].cells)[h]).unit.destination = ((path.cells)[h]).unit.destination;
             ((virgin[path.ID].cells)[h]).unit.type = ((path.cells)[h]).unit.type;
+            ((virgin[path.ID].cells)[h]).unit.blocked = ((path.cells)[h]).unit.blocked;
           }
         } else {
-          ((virgin[path.ID].cells)[h]).unit.alive = ((path.cells)[h]).unit.alive;
-          ((virgin[path.ID].cells)[h]).unit.idu = ((path.cells)[h]).unit.idu;
-          ((virgin[path.ID].cells)[h]).unit.destination = ((path.cells)[h]).unit.destination;
-          ((virgin[path.ID].cells)[h]).unit.type = ((path.cells)[h]).unit.type;
+          // 00-
+          ((virgin[path.ID].cells)[p2]).unit.alive = ((path.cells)[p2]).unit.alive;
+          ((virgin[path.ID].cells)[p2]).unit.idu = ((path.cells)[p2]).unit.idu;
+          ((virgin[path.ID].cells)[p2]).unit.destination = ((path.cells)[p2]).unit.destination;
+          ((virgin[path.ID].cells)[p2]).unit.type = ((path.cells)[p2]).unit.type;
+          ((virgin[path.ID].cells)[p2]).unit.blocked = ((path.cells)[p2]).unit.blocked;
         }
       }
     }
@@ -514,15 +607,28 @@ const heatmap = (paths) => {
   return heatmap;
 };
 
+const on = Math.floor(Math.random() * 250);
+const off = Math.floor(Math.random() * 500) + 250;
+
 let gg = 0;
 function loop(paths, virgin, matrix, nodes) {
+  if (test === '4') {
+    if (tick > on && tick < off) {
+      if (paths[1].cells[15].unit.alive === true) {
+        alert('OK');
+        paths[1].cells[15].unit.blocked = true;
+      }
+    } else if (tick >= off) {
+      if (paths[1].cells[15].unit.alive === true) {
+        paths[1].cells[15].unit.blocked = false;
+      }
+    }
+  }
   const virgin2 = reset(JSON.parse(JSON.stringify(virgin)));
   const paths2 = upgrade(paths, virgin2);
   const paths3 = random(paths2, database);
   const paths4 = unblock(paths3, matrix, nodes);
   const [paths5, matrix2] = update(paths4, paths, matrix, nodes);
-  const heatmap1 = heatmap(paths5);
-  // paths5[].cells
   refresh(paths5);
   tick += 1;
   if (!timeout) {
@@ -554,6 +660,7 @@ const FizzyText = function (clock2, background, highways, stroke, cellsAlive, hi
   this.test1 = function() { window.location = pathURL + '?test=1'; };
   this.test2 = function() { window.location = pathURL + '?test=2'; };
   this.test3 = function() { window.location = pathURL + '?test=3'; };
+  this.test4 = function() { window.location = pathURL + '?test=4'; };
 };
 
 const text = new FizzyText(clock2, background, highways, stroke, cellsAlive, hideCells, showWeights, densityIndex, speedIndex, pollutionIndex, lengthIndex, typeIndex, historyPollution, increasePollution, decreasePollution);
@@ -661,5 +768,6 @@ tests.add(text, 'test0');
 tests.add(text, 'test1');
 tests.add(text, 'test2');
 tests.add(text, 'test3');
+tests.add(text, 'test4');
 
 gui.remember(text);
