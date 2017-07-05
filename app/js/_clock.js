@@ -13,10 +13,10 @@ switch (test) {
   case '4':
     map = require('../json/test-1.json');
     break;
-    case '2':
+  case '2':
     map = require('../json/test-2.json');
     break;
-    case '3':
+  case '3':
     map = require('../json/test-3.json');
     break;
   default:
@@ -75,7 +75,7 @@ switch (test) {
     active.set(0, 1);
     active.set(171, 1);
 
-    dead.push(136, 170);
+    dead.push(136);
 
     priority.set(4, 0);
     priority.set(6, 1);
@@ -206,7 +206,8 @@ const update = (paths, oldPaths, matrix, nodes) => {
     normLength = 1 - (paths[i].length / maxRealLength);
     paths[i].pollution = normPollution;
     const index = Math.round((((density * densityIndex) + (speed * speedIndex) + (normPollution * pollutionIndex) + (normLength * lengthIndex)) / (((densityIndex + speedIndex + pollutionIndex + lengthIndex)))) * 100) / 100;
-    paths[i].index = index;
+    const stupid_index = Math.round((((normPollution * pollutionIndex) + (normLength * lengthIndex)) / (((pollutionIndex + lengthIndex)))) * 100) / 100;
+    const smart_index = Math.round((((density * densityIndex) + (speed * speedIndex) + (normLength * lengthIndex)) / (((densityIndex + speedIndex + lengthIndex)))) * 100) / 100;
     for (const A of nodes) {
       for (const B of nodes) {
         if (paths[i].A.x1 === A.lat && paths[i].A.y1 === A.lon && paths[i].B.x2 === B.lat && paths[i].B.y2 === B.lon) {
@@ -215,6 +216,8 @@ const update = (paths, oldPaths, matrix, nodes) => {
           matrix[paths[i].A.i][paths[i].B.j].flux = flux;
           matrix[paths[i].A.i][paths[i].B.j].pollution = normPollution;
           matrix[paths[i].A.i][paths[i].B.j].index = index;
+          matrix[paths[i].A.i][paths[i].B.j].stupid_index = stupid_index;
+          matrix[paths[i].A.i][paths[i].B.j].smart_index = smart_index
         }
       }
     }
@@ -449,19 +452,32 @@ const reset = (paths) => {
   return paths;
 };
 
-function hike(start, dist, matrix, prev) {
+function hike(start, dist, matrix, prev, type) {
   let next = null;
+
   if (matrix[start]) {
     let matrix_length = matrix[start].length;
     for (let column = 0; column < matrix_length; column += 1) {
       if (matrix[start][column]) {
-        if (!dist.has(column) || (dist.has(column) && dist.get(column) > dist.get(start) + (1 - matrix[start][column].index))) {
-          dist.set(column, dist.get(start) + (1-matrix[start][column].index));
-          let array_nodes = JSON.parse(JSON.stringify(prev.get(start)));
-          array_nodes.push(column);
-          prev.set(column, array_nodes);
+        if (type === 1) {
+          debugger;
+          if (!dist.has(column) || (dist.has(column) && dist.get(column) > dist.get(start) + (1 - matrix[start][column].stupid_index))) {
+            dist.set(column, dist.get(start) + (1 - matrix[start][column].stupid_index));
+            let array_nodes = JSON.parse(JSON.stringify(prev.get(start)));
+            array_nodes.push(column);
+            prev.set(column, array_nodes);
+          }
         }
-        hike(column, dist, matrix, prev);
+        else {
+          debugger;
+          if (!dist.has(column) || (dist.has(column) && dist.get(column) > dist.get(start) + (1 - matrix[start][column].smart_index))) {
+            dist.set(column, dist.get(start) + (1 - matrix[start][column].smart_index));
+            let array_nodes = JSON.parse(JSON.stringify(prev.get(start)));
+            array_nodes.push(column);
+            prev.set(column, array_nodes);
+          }
+        }
+        hike(column, dist, matrix, prev, type);
       }
     }
   }
@@ -470,6 +486,7 @@ function hike(start, dist, matrix, prev) {
 const unblock = (paths, matrix, nodes) => {
 
   const cross = [];
+  let type_auto = null;
   while (cross.push([]) < nodes.length);
 
   for (let i = 0; i < paths.length; i += 1) {
@@ -491,6 +508,7 @@ const unblock = (paths, matrix, nodes) => {
         if (path[i].cells[lastCell].unit.alive === true) {
           const destination = path[i].cells[lastCell].unit.destination;
           const this_cell = path[i].cells[lastCell].id;
+          type_auto = path[i].cells[lastCell].unit.type;
           if (this_cell !== destination - 1) {
             let ok = false;
             let pathNodeDest = null;
@@ -513,7 +531,7 @@ const unblock = (paths, matrix, nodes) => {
               let prev = new Map
               dist.set(path[i].B.j, 0);
               prev.set(path[i].B.j, [path[i].B.j]);
-              hike(path[i].B.j, dist, matrix, prev);
+              hike(path[i].B.j, dist, matrix, prev, type_auto);
 
               // console.log("DISTANZE: ");
               // console.log(dist);
@@ -558,8 +576,8 @@ const unblock = (paths, matrix, nodes) => {
             }
           }
 
-          for (let k = i+1; k < path.length; k++){
-            let invisible = path[k].cells.length-1;
+          for (let k = i + 1; k < path.length; k++) {
+            let invisible = path[k].cells.length - 1;
             path[k].cells[invisible].unit.alive = true;
           }
 
@@ -615,7 +633,6 @@ function loop(paths, virgin, matrix, nodes) {
   if (test === '4') {
     if (tick > on && tick < off) {
       if (paths[1].cells[15].unit.alive === true) {
-        alert('OK');
         paths[1].cells[15].unit.blocked = true;
       }
     } else if (tick >= off) {
@@ -656,11 +673,11 @@ const FizzyText = function (clock2, background, highways, stroke, cellsAlive, hi
   this.increasePollution = increasePollution;
   this.decreasePollution = decreasePollution;
   const pathURL = location.protocol + '//' + location.host + location.pathname;
-  this.test0 = function() { window.location = pathURL + '?test=0'; };
-  this.test1 = function() { window.location = pathURL + '?test=1'; };
-  this.test2 = function() { window.location = pathURL + '?test=2'; };
-  this.test3 = function() { window.location = pathURL + '?test=3'; };
-  this.test4 = function() { window.location = pathURL + '?test=4'; };
+  this.test0 = function () { window.location = pathURL + '?test=0'; };
+  this.test1 = function () { window.location = pathURL + '?test=1'; };
+  this.test2 = function () { window.location = pathURL + '?test=2'; };
+  this.test3 = function () { window.location = pathURL + '?test=3'; };
+  this.test4 = function () { window.location = pathURL + '?test=4'; };
 };
 
 const text = new FizzyText(clock2, background, highways, stroke, cellsAlive, hideCells, showWeights, densityIndex, speedIndex, pollutionIndex, lengthIndex, typeIndex, historyPollution, increasePollution, decreasePollution);
