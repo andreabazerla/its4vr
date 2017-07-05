@@ -230,6 +230,8 @@ module.exports = {
               const flux = 0;
               const pollution = 0;
               const index = 0;
+              const stupid_index = 0;
+              const smart_index = 0;
 
               paths.push({
                 ID,
