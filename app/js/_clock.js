@@ -438,7 +438,6 @@ function hike(start, dist, matrix, prev, type) {
     for (let column = 0; column < matrix_length; column += 1) {
       if (matrix[start][column]) {
         if (type === 1) {
-          debugger;
           if (!dist.has(column) || (dist.has(column) && dist.get(column) > dist.get(start) + (1 - matrix[start][column].stupid_index))) {
             dist.set(column, dist.get(start) + (1 - matrix[start][column].stupid_index));
             let array_nodes = JSON.parse(JSON.stringify(prev.get(start)));
@@ -447,7 +446,6 @@ function hike(start, dist, matrix, prev, type) {
           }
         }
         else {
-          debugger;
           if (!dist.has(column) || (dist.has(column) && dist.get(column) > dist.get(start) + (1 - matrix[start][column].smart_index))) {
             dist.set(column, dist.get(start) + (1 - matrix[start][column].smart_index));
             let array_nodes = JSON.parse(JSON.stringify(prev.get(start)));
