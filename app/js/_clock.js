@@ -1,5 +1,5 @@
 const Parser = require('./_parser');
-
+const uuidv1 = require('uuid/v1');
 const href = window.location.href;
 const url = new URL(href);
 const test = url.searchParams.get('test');
@@ -59,7 +59,7 @@ const cells = Parser.getCells(paths, g, 0);
 
 const pathsP = JSON.parse(JSON.stringify(paths));
 
-const database = new Set();
+//const database = new Set();
 
 const active = new Map();
 const dead = [];
@@ -118,55 +118,56 @@ switch (test) {
     priority.set(1, 0);
     priority.set(3, 1);
     break;
-    case '6':
-      active.set(12, 0.1);
-      active.set(47, 0.3);
-      active.set(79, 0.5);
+  case '6':
+    active.set(12, 0.1);
+    active.set(47, 0.3);
+    active.set(79, 0.5);
 
-      dead.push(11);
+    dead.push(11);
 
-      priority.set(1, 0);
-      priority.set(2, 1);
-      priority.set(3, 2);
-      break;
-    default:
-      active.set(0, 0.1);
-      active.set(2181, 0.1);
-      active.set(3718, 0.1);
+    priority.set(1, 0);
+    priority.set(2, 1);
+    priority.set(3, 2);
+    break;
+  default:
+    //active.set(0, 0.1);
+    active.set(2181, 0.1);
+    //active.set(3718, 0.1);
 
-      dead.push(718, 3382, 3715);
+    dead.push(718);
+    //dead.push(718, 3382, 3715);
 
-      priority.set(7, 0);
-      priority.set(2, 1);
+    priority.set(7, 0);
+    priority.set(2, 1);
 
-      priority.set(0, 0);
-      priority.set(41, 1);
-      priority.set(18, 2);
+    priority.set(0, 0);
+    priority.set(41, 1);
+    priority.set(18, 2);
 
-      priority.set(25, 0);
-      priority.set(24, 1);
+    priority.set(25, 0);
+    priority.set(24, 1);
 
-      priority.set(26, 0);
-      priority.set(16, 1);
+    priority.set(26, 0);
+    priority.set(16, 1);
 
-      priority.set(29, 0);
-      priority.set(27, 1);
+    priority.set(29, 0);
+    priority.set(27, 1);
 
-      priority.set(33, 0);
-      priority.set(32, 1);
+    priority.set(33, 0);
+    priority.set(32, 1);
 
-      priority.set(38, 0);
-      priority.set(37, 1);
+    priority.set(38, 0);
+    priority.set(37, 1);
 
-      priority.set(19, 0);
-      priority.set(39, 1);
+    priority.set(19, 0);
+    priority.set(39, 1);
 
-      priority.set(12, 0);
-      priority.set(42, 1);
+    priority.set(12, 0);
+    priority.set(42, 1);
 
-      priority.set(45, 0);
-      priority.set(14, 1);
-      break;
+    priority.set(45, 0);
+    priority.set(14, 1);
+    break;
 }
 
 for (const [key, value] of priority) {
@@ -410,18 +411,7 @@ const upgrade = (paths, virgin) => {
   return virgin;
 };
 
-const createID = () => {
-  const id = Math.floor(1000000000 + (Math.random() * 9000000000));
-  const alive = database.has(id);
-  if (!alive) {
-    database.add(id);
-    return id;
-  } else {
-    return 0;
-  }
-};
-
-const random = (paths, database) => {
+const random = (paths) => {
   for (const birth of active.keys()) {
     for (const path of paths) {
       for (const cell of path.cells) {
@@ -429,13 +419,16 @@ const random = (paths, database) => {
           const limit = active.get(cell.id);
           const rand = Math.random();
           let id = 0;
+          id = uuidv1();
+          /*
           if (database.size < 9000000000) {
             while (id === 0) {
-              id = createID(database);
+              id = uuidv1();
             }
           } else {
             id = 0;
           }
+          */
           const rand2 = (Math.random() + typeIndex) / 2;
           if (rand < limit && path.cells[1].unit.alive === false) {
             cell.unit.idu = id;
@@ -567,7 +560,6 @@ const unblock = (paths, matrix, nodes) => {
             }
             if (matrix[path[i].B.j].length > 0) {
               const Q = JSON.parse(JSON.stringify(nodes));
-
               let dist = new Map();
               let prev = new Map
               dist.set(path[i].B.j, 0);
@@ -684,7 +676,7 @@ function loop(paths, virgin, matrix, nodes) {
   }
   const virgin2 = reset(JSON.parse(JSON.stringify(virgin)));
   const paths2 = upgrade(paths, virgin2);
-  const paths3 = random(paths2, database);
+  const paths3 = random(paths2);
   const paths4 = unblock(paths3, matrix, nodes);
   const [paths5, matrix2] = update(paths4, paths, matrix, nodes);
   refresh(paths5);
@@ -714,13 +706,13 @@ const FizzyText = function (clock2, background, highways, stroke, cellsAlive, hi
   this.increasePollution = increasePollution;
   this.decreasePollution = decreasePollution;
   const pathURL = location.protocol + '//' + location.host + location.pathname;
-  this.test0 = function() { window.location = pathURL + '?test=0'; };
-  this.test1 = function() { window.location = pathURL + '?test=1'; };
-  this.test2 = function() { window.location = pathURL + '?test=2'; };
-  this.test3 = function() { window.location = pathURL + '?test=3'; };
-  this.test4 = function() { window.location = pathURL + '?test=4'; };
-  this.test5 = function() { window.location = pathURL + '?test=5'; };
-  this.test6 = function() { window.location = pathURL + '?test=6'; };
+  this.test0 = function () { window.location = pathURL + '?test=0'; };
+  this.test1 = function () { window.location = pathURL + '?test=1'; };
+  this.test2 = function () { window.location = pathURL + '?test=2'; };
+  this.test3 = function () { window.location = pathURL + '?test=3'; };
+  this.test4 = function () { window.location = pathURL + '?test=4'; };
+  this.test5 = function () { window.location = pathURL + '?test=5'; };
+  this.test6 = function () { window.location = pathURL + '?test=6'; };
 };
 
 const text = new FizzyText(clock2, background, highways, stroke, cellsAlive, hideCells, showWeights, densityIndex, speedIndex, pollutionIndex, lengthIndex, typeIndex, historyPollution, increasePollution, decreasePollution);
