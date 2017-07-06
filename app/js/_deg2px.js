@@ -27,11 +27,18 @@ exports.deg2px = function (lat, lon) {
       mapLonRight = 10.979209;
       break;
     default:
-      mapLatTop = 45.4446;
-      mapLatBottom = 45.3815;
-      mapLonLeft = 10.9350;
-      mapLonRight = 11.0241;
+      mapLatTop = 45.40967;
+      mapLatBottom = 45.40616;
+      mapLonLeft = 10.97420;
+      mapLonRight = 10.979209;
   }
+
+  /* VERONA
+  mapLatTop = 45.4446;
+  mapLatBottom = 45.3815;
+  mapLonLeft = 10.9350;
+  mapLonRight = 11.0241;
+   */
 
   const mapLonDelta = mapLonRight - mapLonLeft;
 
