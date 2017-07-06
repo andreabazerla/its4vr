@@ -244,6 +244,7 @@ const update = (paths, oldPaths, matrix, nodes) => {
           matrix[paths[i].A.i][paths[i].B.j].index = index;
           matrix[paths[i].A.i][paths[i].B.j].basic = basic;
           matrix[paths[i].A.i][paths[i].B.j].premium = premium
+          matrix[paths[i].A.i][paths[i].B.j].disabled = paths[i].disabled;
         }
       }
     }
@@ -500,7 +501,7 @@ function hike(start, dist, matrix, prev, type) {
   if (matrix[start]) {
     let matrix_length = matrix[start].length;
     for (let column = 0; column < matrix_length; column += 1) {
-      if (matrix[start][column]) {
+      if (matrix[start][column] && !matrix[start][column].disabled) {
         if (type === 1) {
           if (!dist.has(column) || (dist.has(column) && dist.get(column) > dist.get(start) + (1 - matrix[start][column].basic))) {
             dist.set(column, dist.get(start) + (1 - matrix[start][column].basic));
