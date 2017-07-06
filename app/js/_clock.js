@@ -24,8 +24,11 @@ switch (test) {
   case '5':
     map = require('../json/test-5.json');
     break;
+  case '6':
+    map = require('../json/test-6.json');
+    break;
   default:
-    map = require('../json/test-0.json');
+    map = require('../json/verona.json');
 }
 
 let clock = 1000 / 3;
@@ -115,11 +118,55 @@ switch (test) {
     priority.set(1, 0);
     priority.set(3, 1);
     break;
-  default:
-    active.set(0, 0.25);
+    case '6':
+      active.set(12, 0.1);
+      active.set(47, 0.3);
+      active.set(79, 0.5);
 
-    dead.push(51);
-    break;
+      dead.push(11);
+
+      priority.set(1, 0);
+      priority.set(2, 1);
+      priority.set(3, 2);
+      break;
+    default:
+      active.set(0, 0.1);
+      active.set(2181, 0.1);
+      active.set(3718, 0.1);
+
+      dead.push(718, 3382, 3715);
+
+      priority.set(7, 0);
+      priority.set(2, 1);
+
+      priority.set(0, 0);
+      priority.set(41, 1);
+      priority.set(18, 2);
+
+      priority.set(25, 0);
+      priority.set(24, 1);
+
+      priority.set(26, 0);
+      priority.set(16, 1);
+
+      priority.set(29, 0);
+      priority.set(27, 1);
+
+      priority.set(33, 0);
+      priority.set(32, 1);
+
+      priority.set(38, 0);
+      priority.set(37, 1);
+
+      priority.set(19, 0);
+      priority.set(39, 1);
+
+      priority.set(12, 0);
+      priority.set(42, 1);
+
+      priority.set(45, 0);
+      priority.set(14, 1);
+      break;
 }
 
 for (const [key, value] of priority) {
@@ -672,6 +719,7 @@ const FizzyText = function (clock2, background, highways, stroke, cellsAlive, hi
   this.test3 = function() { window.location = pathURL + '?test=3'; };
   this.test4 = function() { window.location = pathURL + '?test=4'; };
   this.test5 = function() { window.location = pathURL + '?test=5'; };
+  this.test6 = function() { window.location = pathURL + '?test=6'; };
 };
 
 const text = new FizzyText(clock2, background, highways, stroke, cellsAlive, hideCells, showWeights, densityIndex, speedIndex, pollutionIndex, lengthIndex, typeIndex, historyPollution, increasePollution, decreasePollution);
@@ -781,5 +829,6 @@ tests.add(text, 'test2');
 tests.add(text, 'test3');
 tests.add(text, 'test4');
 tests.add(text, 'test5');
+tests.add(text, 'test6');
 
 gui.remember(text);
