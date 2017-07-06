@@ -28,7 +28,7 @@ switch (test) {
     map = require('../json/test-6.json');
     break;
   default:
-    map = require('../json/verona.json');
+    map = require('../json/test-0.json');
 }
 
 let clock = 1000 / 3;
@@ -130,43 +130,47 @@ switch (test) {
       priority.set(3, 2);
       break;
     default:
-      active.set(0, 0.1);
-      active.set(2181, 0.1);
-      active.set(3718, 0.1);
+      active.set(0, 0.25);
 
-      dead.push(718, 3382, 3715);
-
-      priority.set(7, 0);
-      priority.set(2, 1);
-
-      priority.set(0, 0);
-      priority.set(41, 1);
-      priority.set(18, 2);
-
-      priority.set(25, 0);
-      priority.set(24, 1);
-
-      priority.set(26, 0);
-      priority.set(16, 1);
-
-      priority.set(29, 0);
-      priority.set(27, 1);
-
-      priority.set(33, 0);
-      priority.set(32, 1);
-
-      priority.set(38, 0);
-      priority.set(37, 1);
-
-      priority.set(19, 0);
-      priority.set(39, 1);
-
-      priority.set(12, 0);
-      priority.set(42, 1);
-
-      priority.set(45, 0);
-      priority.set(14, 1);
+      dead.push(51);
       break;
+      // active.set(0, 0.1);
+      // active.set(2181, 0.1);
+      // active.set(3718, 0.1);
+      //
+      // dead.push(718, 3382, 3715);
+      //
+      // priority.set(7, 0);
+      // priority.set(2, 1);
+      //
+      // priority.set(0, 0);
+      // priority.set(41, 1);
+      // priority.set(18, 2);
+      //
+      // priority.set(25, 0);
+      // priority.set(24, 1);
+      //
+      // priority.set(26, 0);
+      // priority.set(16, 1);
+      //
+      // priority.set(29, 0);
+      // priority.set(27, 1);
+      //
+      // priority.set(33, 0);
+      // priority.set(32, 1);
+      //
+      // priority.set(38, 0);
+      // priority.set(37, 1);
+      //
+      // priority.set(19, 0);
+      // priority.set(39, 1);
+      //
+      // priority.set(12, 0);
+      // priority.set(42, 1);
+      //
+      // priority.set(45, 0);
+      // priority.set(14, 1);
+      // break;
 }
 
 for (const [key, value] of priority) {
