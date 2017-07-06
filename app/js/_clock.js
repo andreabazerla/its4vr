@@ -696,13 +696,13 @@ const FizzyText = function (clock2, background, highways, stroke, cellsAlive, hi
   this.increasePollution = increasePollution;
   this.decreasePollution = decreasePollution;
   const pathURL = location.protocol + '//' + location.host + location.pathname;
-  this.test0 = function () { window.location = pathURL + '?test=0'; };
-  this.test1 = function () { window.location = pathURL + '?test=1'; };
-  this.test2 = function () { window.location = pathURL + '?test=2'; };
-  this.test3 = function () { window.location = pathURL + '?test=3'; };
-  this.test4 = function () { window.location = pathURL + '?test=4'; };
-  this.test5 = function () { window.location = pathURL + '?test=5'; };
-  this.test6 = function () { window.location = pathURL + '?test=6'; };
+  this.rule184 = function () { window.location = pathURL + '?test=0'; };
+  this.alternative = function () { window.location = pathURL + '?test=1'; };
+  this.crossroad = function () { window.location = pathURL + '?test=2'; };
+  this.district = function () { window.location = pathURL + '?test=3'; };
+  this.accident = function () { window.location = pathURL + '?test=4'; };
+  this.density = function () { window.location = pathURL + '?test=5'; };
+  this.priority = function () { window.location = pathURL + '?test=6'; };
 };
 
 const text = new FizzyText(clock2, background, highways, stroke, cellsAlive, hideCells, showWeights, densityIndex, speedIndex, pollutionIndex, lengthIndex, typeIndex, historyPollution, increasePollution, decreasePollution);
@@ -806,12 +806,12 @@ controls.add(text, 'decreasePollution').step(1)
   },
 );
 
-tests.add(text, 'test0');
-tests.add(text, 'test1');
-tests.add(text, 'test2');
-tests.add(text, 'test3');
-tests.add(text, 'test4');
-tests.add(text, 'test5');
-tests.add(text, 'test6');
+tests.add(text, 'rule184');
+tests.add(text, 'alternative');
+tests.add(text, 'crossroad');
+tests.add(text, 'district');
+tests.add(text, 'accident');
+tests.add(text, 'density');
+tests.add(text, 'priority');
 
 gui.remember(text);
