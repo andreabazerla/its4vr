@@ -1,5 +1,5 @@
 const Parser = require('./_parser');
-const uuidv1 = require('uuid/v1');
+const uuid = require('uuid/v1');
 const href = window.location.href;
 const url = new URL(href);
 const test = url.searchParams.get('test');
@@ -58,8 +58,6 @@ ways = Parser.getMatrix(ways, nodes, g, 0);
 const cells = Parser.getCells(paths, g, 0);
 
 const pathsP = JSON.parse(JSON.stringify(paths));
-
-//const database = new Set();
 
 const active = new Map();
 const dead = [];
@@ -124,99 +122,52 @@ switch (test) {
     active.set(79, 0.5);
 
     dead.push(11);
-
-<<<<<<< HEAD
     priority.set(1, 0);
     priority.set(2, 1);
     priority.set(3, 2);
     break;
   default:
-    //active.set(0, 0.1);
-    active.set(2181, 0.1);
-    //active.set(3718, 0.1);
+    active.set(0, 0.25);
 
-    dead.push(718);
-    //dead.push(718, 3382, 3715);
-
-    priority.set(7, 0);
-    priority.set(2, 1);
-
-    priority.set(0, 0);
-    priority.set(41, 1);
-    priority.set(18, 2);
-
-    priority.set(25, 0);
-    priority.set(24, 1);
-
-    priority.set(26, 0);
-    priority.set(16, 1);
-
-    priority.set(29, 0);
-    priority.set(27, 1);
-
-    priority.set(33, 0);
-    priority.set(32, 1);
-
-    priority.set(38, 0);
-    priority.set(37, 1);
-
-    priority.set(19, 0);
-    priority.set(39, 1);
-
-    priority.set(12, 0);
-    priority.set(42, 1);
-
-    priority.set(45, 0);
-    priority.set(14, 1);
+    dead.push(51);
     break;
-=======
-      priority.set(1, 0);
-      priority.set(2, 1);
-      priority.set(3, 2);
-      break;
-    default:
-      active.set(0, 0.25);
-
-      dead.push(51);
-      break;
-      // active.set(0, 0.1);
-      // active.set(2181, 0.1);
-      // active.set(3718, 0.1);
-      //
-      // dead.push(718, 3382, 3715);
-      //
-      // priority.set(7, 0);
-      // priority.set(2, 1);
-      //
-      // priority.set(0, 0);
-      // priority.set(41, 1);
-      // priority.set(18, 2);
-      //
-      // priority.set(25, 0);
-      // priority.set(24, 1);
-      //
-      // priority.set(26, 0);
-      // priority.set(16, 1);
-      //
-      // priority.set(29, 0);
-      // priority.set(27, 1);
-      //
-      // priority.set(33, 0);
-      // priority.set(32, 1);
-      //
-      // priority.set(38, 0);
-      // priority.set(37, 1);
-      //
-      // priority.set(19, 0);
-      // priority.set(39, 1);
-      //
-      // priority.set(12, 0);
-      // priority.set(42, 1);
-      //
-      // priority.set(45, 0);
-      // priority.set(14, 1);
-      // break;
->>>>>>> 27ee1badcd169b6efdcf004350c6bc6d93a74deb
+    // active.set(0, 0.1);
+    // active.set(2181, 0.1);
+    // active.set(3718, 0.1);
+    //
+    // dead.push(718, 3382, 3715);
+    //
+    // priority.set(7, 0);
+    // priority.set(2, 1);
+    //
+    // priority.set(0, 0);
+    // priority.set(41, 1);
+    // priority.set(18, 2);
+    //
+    // priority.set(25, 0);
+    // priority.set(24, 1);
+    //
+    // priority.set(26, 0);
+    // priority.set(16, 1);
+    //
+    // priority.set(29, 0);
+    // priority.set(27, 1);
+    //
+    // priority.set(33, 0);
+    // priority.set(32, 1);
+    //
+    // priority.set(38, 0);
+    // priority.set(37, 1);
+    //
+    // priority.set(19, 0);
+    // priority.set(39, 1);
+    //
+    // priority.set(12, 0);
+    // priority.set(42, 1);
+    //
+    // priority.set(45, 0);
+    // priority.set(14, 1);
+    // break;
 }
 
 for (const [key, value] of priority) {
@@ -467,17 +418,7 @@ const random = (paths) => {
         if (cell.id === birth) {
           const limit = active.get(cell.id);
           const rand = Math.random();
-          let id = 0;
-          id = uuidv1();
-          /*
-          if (database.size < 9000000000) {
-            while (id === 0) {
-              id = uuidv1();
-            }
-          } else {
-            id = 0;
-          }
-          */
+          let id = uuid();
           const rand2 = (Math.random() + typeIndex) / 2;
           if (rand < limit && path.cells[1].unit.alive === false) {
             cell.unit.idu = id;
