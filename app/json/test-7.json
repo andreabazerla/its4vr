@@ -1,0 +1,403 @@
+{
+	"kml": {
+		"$": {
+			"xmlns": "http://www.opengis.net/kml/2.2"
+		},
+		"Document": [
+			{
+				"name": [
+					"test-7"
+				],
+				"description": [
+					""
+				],
+				"Style": [
+					{
+						"$": {
+							"id": "line-000000-1200-nodesc-normal"
+						},
+						"LineStyle": [
+							{
+								"color": [
+									"ff000000"
+								],
+								"width": [
+									"1.2"
+								]
+							}
+						],
+						"BalloonStyle": [
+							{
+								"text": [
+									"<h3>$[name]</h3>"
+								]
+							}
+						]
+					},
+					{
+						"$": {
+							"id": "line-000000-1200-nodesc-highlight"
+						},
+						"LineStyle": [
+							{
+								"color": [
+									"ff000000"
+								],
+								"width": [
+									"1.8"
+								]
+							}
+						],
+						"BalloonStyle": [
+							{
+								"text": [
+									"<h3>$[name]</h3>"
+								]
+							}
+						]
+					}
+				],
+				"StyleMap": [
+					{
+						"$": {
+							"id": "line-000000-1200-nodesc"
+						},
+						"Pair": [
+							{
+								"key": [
+									"normal"
+								],
+								"styleUrl": [
+									"#line-000000-1200-nodesc-normal"
+								]
+							},
+							{
+								"key": [
+									"highlight"
+								],
+								"styleUrl": [
+									"#line-000000-1200-nodesc-highlight"
+								]
+							}
+						]
+					}
+				],
+				"Folder": [
+					{
+						"name": [
+							"0"
+						],
+						"Placemark": [
+							{
+								"name": [
+									"0"
+								],
+								"styleUrl": [
+									"#line-000000-1200-nodesc"
+								],
+								"LineString": [
+									{
+										"tessellate": [
+											"1"
+										],
+										"coordinates": [
+											"\n            10.9765863,45.4048757,0\n            10.9765756,45.4057569,0\n          "
+										]
+									}
+								]
+							},
+							{
+								"name": [
+									"1"
+								],
+								"styleUrl": [
+									"#line-000000-1200-nodesc"
+								],
+								"LineString": [
+									{
+										"tessellate": [
+											"1"
+										],
+										"coordinates": [
+											"\n            10.9765756,45.4057569,0\n            10.9765756,45.4080167,0\n          "
+										]
+									}
+								]
+							},
+							{
+								"name": [
+									"2"
+								],
+								"styleUrl": [
+									"#line-000000-1200-nodesc"
+								],
+								"LineString": [
+									{
+										"tessellate": [
+											"1"
+										],
+										"coordinates": [
+											"\n            10.9765756,45.4057569,0\n            10.9793705,45.4069282,0\n          "
+										]
+									}
+								]
+							},
+							{
+								"name": [
+									"3"
+								],
+								"styleUrl": [
+									"#line-000000-1200-nodesc"
+								],
+								"LineString": [
+									{
+										"tessellate": [
+											"1"
+										],
+										"coordinates": [
+											"\n            10.9793705,45.4069282,0\n            10.9765756,45.4080167,0\n          "
+										]
+									}
+								]
+							},
+							{
+								"name": [
+									"4"
+								],
+								"styleUrl": [
+									"#line-000000-1200-nodesc"
+								],
+								"LineString": [
+									{
+										"tessellate": [
+											"1"
+										],
+										"coordinates": [
+											"\n            10.9765756,45.4080167,0\n            10.9765219,45.4102462,0\n          "
+										]
+									}
+								]
+							},
+							{
+								"name": [
+									"5"
+								],
+								"styleUrl": [
+									"#line-000000-1200-nodesc"
+								],
+								"LineString": [
+									{
+										"tessellate": [
+											"1"
+										],
+										"coordinates": [
+											"\n            10.9739363,45.407045,0\n            10.9765756,45.4057569,0\n          "
+										]
+									}
+								]
+							},
+							{
+								"name": [
+									"6"
+								],
+								"styleUrl": [
+									"#line-000000-1200-nodesc"
+								],
+								"LineString": [
+									{
+										"tessellate": [
+											"1"
+										],
+										"coordinates": [
+											"\n            10.9739363,45.407045,0\n            10.9739363,45.4080468,0\n          "
+										]
+									}
+								]
+							},
+							{
+								"name": [
+									"7"
+								],
+								"styleUrl": [
+									"#line-000000-1200-nodesc"
+								],
+								"LineString": [
+									{
+										"tessellate": [
+											"1"
+										],
+										"coordinates": [
+											"\n            10.9765756,45.4080167,0\n            10.9739363,45.4080468,0\n          "
+										]
+									}
+								]
+							},
+							{
+								"name": [
+									"8"
+								],
+								"styleUrl": [
+									"#line-000000-1200-nodesc"
+								],
+								"LineString": [
+									{
+										"tessellate": [
+											"1"
+										],
+										"coordinates": [
+											"\n            10.9765756,45.4080167,0\n            10.9793543,45.4092294,0\n          "
+										]
+									}
+								]
+							},
+							{
+								"name": [
+									"9"
+								],
+								"styleUrl": [
+									"#line-000000-1200-nodesc"
+								],
+								"LineString": [
+									{
+										"tessellate": [
+											"1"
+										],
+										"coordinates": [
+											"\n            10.9793543,45.4092294,0\n            10.9793705,45.4069282,0\n          "
+										]
+									}
+								]
+							},
+							{
+								"name": [
+									"10"
+								],
+								"styleUrl": [
+									"#line-000000-1200-nodesc"
+								],
+								"LineString": [
+									{
+										"tessellate": [
+											"1"
+										],
+										"coordinates": [
+											"\n            10.9793543,45.4092294,0\n            10.9765219,45.4102462,0\n          "
+										]
+									}
+								]
+							},
+							{
+								"name": [
+									"11"
+								],
+								"styleUrl": [
+									"#line-000000-1200-nodesc"
+								],
+								"LineString": [
+									{
+										"tessellate": [
+											"1"
+										],
+										"coordinates": [
+											"\n            10.9793543,45.4092294,0\n            10.9804701,45.409734,0\n          "
+										]
+									}
+								]
+							},
+							{
+								"name": [
+									"12"
+								],
+								"styleUrl": [
+									"#line-000000-1200-nodesc"
+								],
+								"LineString": [
+									{
+										"tessellate": [
+											"1"
+										],
+										"coordinates": [
+											"\n            10.9739363,45.4080468,0\n            10.9765219,45.4102462,0\n          "
+										]
+									}
+								]
+							},
+							{
+								"name": [
+									"13"
+								],
+								"styleUrl": [
+									"#line-000000-1200-nodesc"
+								],
+								"LineString": [
+									{
+										"tessellate": [
+											"1"
+										],
+										"coordinates": [
+											"\n            10.9739363,45.4080468,0\n            10.9726167,45.4080769,0\n          "
+										]
+									}
+								]
+							},
+							{
+								"name": [
+									"14"
+								],
+								"styleUrl": [
+									"#line-000000-1200-nodesc"
+								],
+								"LineString": [
+									{
+										"tessellate": [
+											"1"
+										],
+										"coordinates": [
+											"\n            10.9728313,45.4064951,0\n            10.9739363,45.407045,0\n          "
+										]
+									}
+								]
+							},
+							{
+								"name": [
+									"15"
+								],
+								"styleUrl": [
+									"#line-000000-1200-nodesc"
+								],
+								"LineString": [
+									{
+										"tessellate": [
+											"1"
+										],
+										"coordinates": [
+											"\n            10.9805131,45.4064952,0\n            10.9793705,45.4069282,0\n          "
+										]
+									}
+								]
+							},
+							{
+								"name": [
+									"16"
+								],
+								"styleUrl": [
+									"#line-000000-1200-nodesc"
+								],
+								"LineString": [
+									{
+										"tessellate": [
+											"1"
+										],
+										"coordinates": [
+											"\n            10.9765219,45.4102462,0\n            10.9765112,45.4112103,0\n          "
+										]
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		]
+	}
+}

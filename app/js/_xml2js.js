@@ -3,11 +3,11 @@ var fs = require('fs'),
 
 var parser = new xml2js.Parser();
 
-fs.readFile('./app/xml/verona.xml', function (err, data) {
+fs.readFile('./app/xml/test-0.xml', function (err, data) {
 
   parser.parseString(data, function (err, result) {
 
-    fs.writeFile('app/json/verona.json', JSON.stringify(result, null, '\t'), (err) => {
+    fs.writeFile('app/json/test-0.json', JSON.stringify(result, null, '\t'), (err) => {
       if (err) throw err;
     });
   });

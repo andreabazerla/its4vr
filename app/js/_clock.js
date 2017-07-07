@@ -27,6 +27,9 @@ switch (test) {
   case '6':
     map = require('../json/test-6.json');
     break;
+  case '7':
+    map = require('../json/test-7.json');
+    break;
   default:
     map = require('../json/test-0.json');
 }
@@ -122,9 +125,34 @@ switch (test) {
     active.set(79, 0.5);
 
     dead.push(11);
+
     priority.set(1, 0);
     priority.set(2, 1);
     priority.set(3, 2);
+    break;
+  case '7':
+    active.set(0, 0.1);
+    active.set(642, 0.3);
+    active.set(619, 0.5);
+
+    dead.push(530, 686, 618);
+
+    priority.set(15, 0);
+    priority.set(2, 1);
+    priority.set(9, 2);
+
+    priority.set(1, 0);
+    priority.set(3, 1);
+
+    priority.set(4, 0);
+    priority.set(10, 1);
+    priority.set(12, 2);
+
+    priority.set(6, 0);
+    priority.set(7, 1);
+
+    priority.set(0, 0);
+    priority.set(5, 1);
     break;
   default:
     active.set(0, 0.25);
@@ -703,6 +731,7 @@ const FizzyText = function (clock2, background, highways, stroke, cellsAlive, hi
   this.accident = function () { window.location = pathURL + '?test=4'; };
   this.density = function () { window.location = pathURL + '?test=5'; };
   this.priority = function () { window.location = pathURL + '?test=6'; };
+  this.dijkstra = function () { window.location = pathURL + '?test=7'; };
 };
 
 const text = new FizzyText(clock2, background, highways, stroke, cellsAlive, hideCells, showWeights, densityIndex, speedIndex, pollutionIndex, lengthIndex, typeIndex, historyPollution, increasePollution, decreasePollution);
@@ -813,5 +842,6 @@ tests.add(text, 'district');
 tests.add(text, 'accident');
 tests.add(text, 'density');
 tests.add(text, 'priority');
+tests.add(text, 'dijkstra');
 
 gui.remember(text);
