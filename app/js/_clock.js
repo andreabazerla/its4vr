@@ -842,6 +842,6 @@ tests.add(text, 'district');
 tests.add(text, 'accident');
 tests.add(text, 'density');
 tests.add(text, 'priority');
-tests.add(text, 'dijkstra');
+// tests.add(text, 'dijkstra');
 
 gui.remember(text);
