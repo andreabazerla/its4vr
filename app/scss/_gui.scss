@@ -1,0 +1,23 @@
+.dg .c .slider .slider-fg {
+  background: #ff0000;
+}
+
+.dg .c .slider:hover .slider-fg {
+  background: #ff0000;
+}
+
+.dg .cr.number {
+  border-left: 3px solid #ff0000;
+}
+
+.dg .cr.number input[type=text] {
+  color: #ff0000;
+}
+
+.dg .cr.boolean {
+  border-left: 3px solid #ff0000;
+}
+
+.dg .cr.function {
+  border-left: 3px solid #ff0000;
+}

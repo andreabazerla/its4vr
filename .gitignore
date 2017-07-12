@@ -2,4 +2,3 @@ backup/
 dist/
 node_modules/
 analytics.js
-gulpfile.js
