@@ -21,6 +21,7 @@
     "gulp-browserify": "^0.5.1",
     "gulp-clean-css": "^3.0.3",
     "gulp-concat": "^2.6.1",
+    "gulp-cssmin": "^0.2.0",
     "gulp-nodemon": "^2.2.1",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^3.1.0",
@@ -28,8 +29,8 @@
     "heatmap.js": "^2.0.5",
     "jquery": "^3.2.1",
     "uuid": "^3.1.0",
+    "vinyl-buffer": "^1.0.0",
     "vinyl-source-stream": "^1.1.0",
-    "webpack": "^2.4.1",
     "xml2js": "^0.4.17"
   },
   "scripts": {
